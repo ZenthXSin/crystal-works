@@ -1,0 +1,26 @@
+type: GenericCrafter
+size: 3
+health: 440
+craftTime: 75
+outputItem: crystal-alloy/2
+drawer: {
+  type: DrawMulti
+  drawers: [
+    {
+      type: DrawDefault
+    }
+    {
+      type: DrawCrucibleFlame
+    }
+    {
+      type: DrawGlowRegion
+    }
+  ]
+}
+consumes: {
+  items: [crystal/3, lead/2]
+  power: 2.4
+}
+requirements: [copper/120, lead/80, graphite/40]
+category: crafting
+research: crystal

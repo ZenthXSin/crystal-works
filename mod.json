@@ -1,0 +1,9 @@
+{
+  "name": "crystal-works",
+  "displayName": "晶工",
+  "author": "Eve",
+  "description": "晶能科技模组 - 新增晶矿及其加工联动\nAdds crystal resource and its processing chain.",
+  "version": "1.0.0",
+  "minGameVersion": "146",
+  "dependencies": []
+}

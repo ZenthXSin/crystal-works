@@ -1,0 +1,36 @@
+{
+  "project": "crystal-works",
+  "displayName": "晶工 - Crystal Works",
+  "language": "JSON/Hjson (pure)",
+  "version": "1.0.0",
+  "goal": "A small but self-contained JSON mod adding crystal ore and its processing chain",
+  "features": {
+    "items": ["crystal", "crystal-alloy"],
+    "liquids": ["crystal-fluid"],
+    "blocks": {
+      "production": {
+        "crystal-drill": "drill": "Drill - mines crystal ore, tier 4",
+        "crystal-smelter": "GenericCrafter - crystal + lead -> crystal-alloy",
+        "crystal-fluid-mixer": "GenericCrafter - crystal + water -> crystal-fluid (phase 2)"
+      },
+      "turrets": {
+        "crystal-turret": "ItemTurret - shoots crystal bolts, damage type: electric (phase 2)"
+      },
+      "defense": {
+        "crystal-wall": "Wall - basic crystal wall (phase 2)"
+      }
+    },
+    "bundles": ["en (bundle.properties)"],
+    "sprites": "generated placeholder squares",
+    "research": "crystal -> crystal-alloy -> blocks"
+  },
+  "status": {
+    "implemented": ["crystal", "crystal-fluid", "crystal-alloy", "crystal-drill", "crystal-smelter"],
+    "planned": ["crystal-mixer", "crystal-turret", "crystal-wall"]
+  },
+  "references": [
+    "Allure (HJSON organization pattern)",
+    "LMM JSON tutorial",
+    "Mindustry source: mindustry.world.blocks.production.*"
+  ]
+}
