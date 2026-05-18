@@ -1,9 +1,7 @@
-type: Item
 color: "65C3E8"
 hardness: 4
 explosiveness: 0.1
 flammability: 0
 radioactivity: 0
 charge: 0.6
-cost: 2.0
 research: plastanium

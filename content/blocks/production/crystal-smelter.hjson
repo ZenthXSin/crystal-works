@@ -6,9 +6,15 @@ outputItem: crystal-alloy/2
 drawer: {
   type: DrawMulti
   drawers: [
-    { type: DrawDefault }
-    { type: DrawCrucibleFlame }
-    { type: DrawGlowRegion }
+    {
+      type: DrawDefault
+    }
+    {
+      type: DrawCrucibleFlame
+    }
+    {
+      type: DrawGlowRegion
+    }
   ]
 }
 consumes: {

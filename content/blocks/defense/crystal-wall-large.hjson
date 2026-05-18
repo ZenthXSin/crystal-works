@@ -1,6 +1,12 @@
-type: LargeWall
+type: Wall
 size: 2
-health: 480
+health: 1680
+lightningChance: 0.12
+lightningDamage: 18
+lightningLength: 14
+lightningColor: "65C3E8"
+flashHit: true
+flashColor: "B8F0FF"
+requirements: [crystal/24, lead/30, graphite/20]
 category: defense
-requirements: [crystal/120, lead/80, graphite/40]
 research: crystal-wall
