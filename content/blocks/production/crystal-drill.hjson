@@ -18,6 +18,6 @@ consumes: {
     booster: true
   }
 }
-requirements: [copper/80, lead/60, crystal-works-crystal/30]
+requirements: [copper/80, lead/60, crystal/30]
 category: production
 research: laser-drill
