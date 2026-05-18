@@ -1,0 +1,6 @@
+type: Wall
+size: 1
+health: 120
+category: defense
+requirements: [crystal/30, lead/20]
+research: crystal

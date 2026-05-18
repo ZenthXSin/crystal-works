@@ -1,0 +1,47 @@
+type: ItemTurret
+size: 3
+health: 800
+reload: 45
+range: 200
+shootCone: 12
+inaccuracy: 3
+rotateSpeed: 2.0
+shootSound: buzz
+ammoTypes: {
+  crystal: {
+    type: BasicBulletType
+    damage: 40
+    speed: 5.5
+    lifetime: 36
+    width: 4
+    height: 12
+    hitEffect: { type: WaveEffect, sizeFrom: 0, sizeTo: 15, lifetime: 10, colorFrom: "65C3E8", colorTo: "65C3E888" }
+    despawnEffect: { type: ParticleEffect, particles: 6, sizeFrom: 6, sizeTo: 0, lifetime: 20, color: "65C3E8" }
+    status: crystal-shock
+    statusDuration: 60
+    splashDamage: 20
+    splashRadius: 20
+  }
+  crystal-alloy: {
+    type: BasicBulletType
+    damage: 70
+    speed: 6.0
+    lifetime: 42
+    width: 6
+    height: 16
+    pierce: true
+    pierceDamage: 0.3
+    hitEffect: { type: WaveEffect, sizeFrom: 0, sizeTo: 25, lifetime: 15, colorFrom: "4A8EC7", colorTo: "4A8EC788" }
+    despawnEffect: { type: MultiEffect, effects: [
+      { type: ParticleEffect, particles: 12, sizeFrom: 8, sizeTo: 0, lifetime: 30, color: "4A8EC7" },
+      { type: LightningEffect, randomLength: true, length: 3, color: "65C3E8", damage: 15, nodes: 3 }
+    ]}
+    status: crystal-shock
+    statusDuration: 90
+    splashDamage: 35
+    splashRadius: 30
+  }
+}
+category: turret
+requirements: [copper/150, lead/100, crystal/80, graphite/50]
+research: crystal-drill

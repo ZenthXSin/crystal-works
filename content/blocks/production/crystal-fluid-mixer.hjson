@@ -1,0 +1,21 @@
+type: GenericCrafter
+size: 2
+health: 250
+craftTime: 60
+outputLiquid: crystal-fluid/0.8
+drawer: {
+  type: DrawMulti
+  drawers: [
+    { type: DrawDefault }
+    { type: DrawLiquidLiquid, liquid: crystal-fluid }
+    { type: DrawGlowRegion }
+  ]
+}
+consumes: {
+  items: [crystal/2]
+  liquid: water/0.5
+  power: 1.2
+}
+requirements: [copper/50, lead/40, graphite/20]
+category: crafting
+research: crystal-smelter

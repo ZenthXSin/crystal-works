@@ -2,35 +2,76 @@
   "project": "crystal-works",
   "displayName": "晶工 - Crystal Works",
   "language": "JSON/Hjson (pure)",
-  "version": "1.0.0",
+  "version": "1.1.0",
+  "changelog": "Phase 2: Balance overhaul + new content (turret, wall, mixer)",
   "goal": "A small but self-contained JSON mod adding crystal ore and its processing chain",
   "features": {
-    "items": ["crystal", "crystal-alloy"],
+    "items": ["crystal", "crystal-alloy", "crystal-shard"],
     "liquids": ["crystal-fluid"],
     "blocks": {
       "production": {
-        "crystal-drill": "drill": "Drill - mines crystal ore, tier 4",
+        "crystal-drill": "Drill - tier 4, improved balance",
         "crystal-smelter": "GenericCrafter - crystal + lead -> crystal-alloy",
-        "crystal-fluid-mixer": "GenericCrafter - crystal + water -> crystal-fluid (phase 2)"
+        "crystal-fluid-mixer": "GenericCrafter - crystal + water -> crystal-fluid",
+        "crystal-borer": "BurstDrill - tier 5, higher throughput"
       },
       "turrets": {
-        "crystal-turret": "ItemTurret - shoots crystal bolts, damage type: electric (phase 2)"
+        "crystal-turret": "ItemTurret - crystal bolts + shock effects"
       },
       "defense": {
-        "crystal-wall": "Wall - basic crystal wall (phase 2)"
+        "crystal-wall": "Wall - basic armor",
+        "crystal-wall-large": "LargeWall - extended coverage"
+      },
+      "environment": {
+        "crystal-ore": "OreBlock - mineable crystal ore"
       }
     },
-    "bundles": ["en (bundle.properties)"],
+    "status_effects": {
+      "crystal-shock": "Shock effect from crystal turret"
+    },
+    "bundles": ["en (bundle.properties)", "zh_CN (bundle_zh_CN.properties)"],
     "sprites": "generated placeholder squares",
-    "research": "crystal -> crystal-alloy -> blocks"
+    "research": "crystal -> crystal-alloy -> blocks -> turret/wall"
+  },
+  "balance_overhaul_v1.1": {
+    "crystal_drill": {
+      "tier_old": 4, "tier_new": 5,
+      "drillTime_old": 320, "drillTime_new": 200,
+      "health_old": 360, "health_new": 540,
+      "size": 3,
+      "power_old": 1.8, "power_new": 2.5,
+      "liquidBoost_old": 1.8, "liquidBoost_new": 2.0,
+      "reason": "tier 4 drillTime 320 was too slow vs industrial-drill (tier 6, 200). Raised tier to 5, reduced time, increased health/power to match size 3 tier-5 range"
+    },
+    "crystal_smelter": {
+      "recipe_old": "crystal/3 + lead/2", "recipe_new": "crystal/4 + lead/6",
+      "craftTime_old": 75, "craftTime_new": 100,
+      "reason": "Old recipe too cheap. New ratio 2:3 mirrors plastanium/poly ratio. Longer craft time balances throughput"
+    },
+    "crystal_alloy": {
+      "hardness_old": 0, "hardness_new": 1,
+      "reason": "hardness 0 means no drill can mine it. Set to 1 so all drills can process"
+    },
+    "crystal_fluid": {
+      "heatCapacity_old": 1.8, "heatCapacity_new": 1.5,
+      "viscosity_old": 0.15, "viscosity_new": 0.3,
+      "reason": "1.8 too close to cryofluid(1.9). 1.5 positions it as mid-tier coolant. Higher viscosity gives better flow control feel"
+    },
+    "crystal": {
+      "hardness_old": 3, "hardness_new": 4,
+      "reason": "tier 4 drill can barely mine. Set hardness 4 for proper tier match"
+    }
   },
   "status": {
-    "implemented": ["crystal", "crystal-fluid", "crystal-alloy", "crystal-drill", "crystal-smelter"],
-    "planned": ["crystal-mixer", "crystal-turret", "crystal-wall"]
+    "implemented_v1.0": ["crystal", "crystal-fluid", "crystal-alloy", "crystal-drill", "crystal-smelter"],
+    "updated_v1.1": ["crystal-drill (balanced)", "crystal-smelter (balanced)", "crystal-alloy (hardness fix)", "crystal-fluid (rebalanced)", "crystal (hardness fix)"],
+    "new_v1.1": ["crystal-fluid-mixer", "crystal-turret", "crystal-wall", "crystal-wall-large", "crystal-borer", "crystal-shock-status"],
+    "planned_v1.2": ["crystal-battery", "crystal-conduit", "crystal-armor-unit"]
   },
   "references": [
     "Allure (HJSON organization pattern)",
     "LMM JSON tutorial",
-    "Mindustry source: mindustry.world.blocks.production.*"
+    "Mindustry source: mindustry.world.blocks.production.*",
+    "Local mods: VoidShield, BetaMindy (balance patterns)"
   ]
 }

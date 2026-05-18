@@ -1,0 +1,6 @@
+type: LargeWall
+size: 2
+health: 480
+category: defense
+requirements: [crystal/120, lead/80, graphite/40]
+research: crystal-wall

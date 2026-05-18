@@ -1,5 +1,5 @@
 color: "65C3E8FF"
 barColor: "65C3E8"
 temperature: 0.2
-heatCapacity: 1.8
-viscosity: 0.15
+heatCapacity: 1.5
+viscosity: 0.3
