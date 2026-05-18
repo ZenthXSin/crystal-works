@@ -5,3 +5,4 @@ damage: 0.5
 effect: shock
 effectChance: 0.3
 permanent: false
+name: crystal-shock

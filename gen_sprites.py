@@ -1,149 +1,183 @@
-"""Generate crystal-works sprites - pixel art for Crystal Works mod v1.1.0"""
+"""Generate crystal-works pixel art sprites"""
 from PIL import Image, ImageDraw
 import os
 
-COLOR_CRYSTAL = (101, 195, 232, 255)      # #65C3E8 - crystal blue
-COLOR_CRYSTAL_DARK = (74, 142, 199, 255)  # #4A8EC7 - alloy blue
-COLOR_WHITE = (255, 255, 255, 255)
-COLOR_METAL = (140, 150, 160, 255)
-COLOR_METAL_DARK = (90, 95, 100, 255)
-COLOR_BG = (0, 0, 0, 0)  # transparent
-
+BLUE = (101, 195, 232, 255)
+BLUE_D = (74, 142, 199, 255)
+WHITE = (255, 255, 255, 255)
+METAL = (140, 150, 160, 255)
+METAL_D = (90, 95, 100, 255)
 BASE = "/home/zenxsin/cow/project/crystal-works/sprites"
 
-def draw_crystal_item(draw, cx, cy, color):
-    """Draw a crystal gem shape"""
-    # Crystal shape: hexagon-like diamond
-    pts = [
-        (cx, cy - 12),      # top
-        (cx + 8, cy - 4),   # top right
-        (cx + 8, cy + 4),  # bottom right
-        (cx, cy + 12),      # bottom
-        (cx - 8, cy + 4),  # bottom left
-        (cx - 8, cy - 4),  # top left
-    ]
-    draw.polygon(pts, fill=color, outline=COLOR_WHITE)
-    # inner highlight
-    inner = [
-        (cx, cy - 6),
-        (cx + 4, cy - 2),
-        (cx + 4, cy + 2),
-        (cx, cy + 6),
-        (cx - 4, cy + 2),
-        (cx - 4, cy - 2),
-    ]
-    hl = (min(color[0] + 40, 255), min(color[1] + 40, 255), min(color[2] + 40, 255), 255)
-    draw.polygon(inner, fill=hl)
 
-def draw_alloy_item(draw, cx, cy, color):
-    """Draw a metallic ingot shape"""
-    # Ingot body
-    draw.rectangle([cx-8, cy-10, cx+8, cy+10], fill=color, outline=COLOR_WHITE)
-    # Top highlight
-    draw.rectangle([cx-6, cy-8, cx-8, cy-4], fill=(180, 190, 200, 255))
-    # Actually proper ingot
-    draw.polygon([
-        (cx-10, cy-8), (cx+10, cy-8),
-        (cx+6, cy+10), (cx-6, cy+10)
-    ], fill=color, outline=COLOR_WHITE)
-    hl = (min(color[0] + 60, 255), min(color[1] + 60, 255), min(color[2] + 60, 255), 255)
-    draw.polygon([
-        (cx-7, cy-6), (cx+7, cy-6),
-        (cx+4, cy+2), (cx-4, cy+2)
-    ], fill=hl)
+def item_crystal():
+    img = Image.new("RGBA", (32, 32), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    cx, cy = 16, 16
+    # Hexagon crystal
+    pts = [(cx, cy - 12), (cx + 8, cy - 4), (cx + 8, cy + 4),
+           (cx, cy + 12), (cx - 8, cy + 4), (cx - 8, cy - 4)]
+    d.polygon(pts, fill=BLUE, outline=WHITE)
+    # Inner highlight
+    hi = [(cx, cy - 6), (cx + 4, cy - 2), (cx + 4, cy + 2),
+          (cx, cy + 6), (cx - 4, cy + 2), (cx - 4, cy - 2)]
+    d.polygon(hi, fill=(141, 215, 255, 255))
+    img.save(BASE + "/items/crystal.png")
 
-def draw_crystal_drill(draw):
-    """3x3 drill with crystal bits"""
-    # Base frame (gray metal)
-    draw.rectangle([8, 40, 88, 88], fill=COLOR_METAL_DARK, outline=COLOR_METAL)
-    # Drill head (top, centered)
-    draw.polygon([(48, 8), (40, 40), (56, 40)], fill=COLOR_METAL, outline=COLOR_METAL_DARK)
-    # Crystal bits on drill head
+
+def item_alloy():
+    img = Image.new("RGBA", (32, 32), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    cx, cy = 16, 16
+    # Ingot shape
+    d.polygon([(cx - 10, cy - 8), (cx + 10, cy - 8),
+               (cx + 6, cy + 10), (cx - 6, cy + 10)],
+              fill=BLUE_D, outline=WHITE)
+    d.polygon([(cx - 7, cy - 6), (cx + 7, cy - 6),
+               (cx + 4, cy + 2), (cx - 4, cy + 2)],
+              fill=(134, 182, 219, 255))
+    img.save(BASE + "/items/crystal-alloy.png")
+
+
+def block_drill():
+    img = Image.new("RGBA", (96, 96), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    # Base frame
+    d.rectangle([8, 40, 88, 88], fill=METAL_D, outline=METAL)
+    # Drill head
+    d.polygon([(48, 8), (36, 40), (60, 40)], fill=METAL, outline=METAL_D)
+    d.polygon([(48, 12), (40, 36), (56, 36)], fill=BLUE)
+    # Crystal bits on head
     for x in [36, 48, 60]:
-        draw.rectangle([x, 12, x+4, 20], fill=COLOR_CRYSTAL)
-    # Crystal vein decoration on the body
-    fornt
-    for y in [48, 56, 64, 72]:
-        draw.rectangle([40, y, 56, y+4], fill=COLOR_CRYSTAL)
-    # Support legs
-    draw.rectangle([12, 60, 20, 88], fill=COLOR_METAL)
-    draw.rectangle([76, 60, 84, 88], fill=COLOR_METAL)
+        d.rectangle([x, 12, x + 4, 20], fill=BLUE)
+    # Crystal veins
+    for y in range(48, 80, 8):
+        d.rectangle([36, y, 60, y + 4], fill=BLUE)
+    # Legs
+    d.rectangle([12, 60, 20, 88], fill=METAL)
+    d.rectangle([76, 60, 84, 88], fill=METAL)
+    img.save(BASE + "/blocks/production/crystal-drill.png")
 
-def draw_crystal_smelter(draw):
-    """3x3 furnace with crystal flame"""
-    # Furnace body
-    draw.rectangle([12, 24, 84, 84], fill=COLOR_METAL_DARK, outline=COLOR_METAL)
-    # Inner chamber
-    draw.rectangle([24, 36, 72, 78], fill=(30, 30, 40, 255))
-    # Crystal flame (central glow)
-    draw.ellipse([36, 44, 60, 72], fill=COLOR_CRYSTAL)
-    # Inner bright flame
-    draw.ellipse([42, 50, 54, 66], fill=COLOR_WHITE)
-    # Cross pattern on furnace
-    draw.rectangle([24, 54, 72, 58], fill=COLOR_METAL)
-    draw.rectangle([46, 36, 50, 78], fill=COLOR_METAL)
+
+def block_smelter():
+    img = Image.new("RGBA", (96, 96), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    # Body
+    d.rectangle([12, 24, 84, 84], fill=METAL_D, outline=METAL)
+    d.rectangle([24, 36, 72, 78], fill=(30, 30, 40, 255))
+    # Flame
+    d.ellipse([36, 44, 60, 72], fill=BLUE)
+    d.ellipse([42, 50, 54, 66], fill=(180, 230, 255, 255))
+    # Cross frame
+    d.rectangle([24, 54, 72, 58], fill=METAL)
+    d.rectangle([46, 36, 50, 78], fill=METAL)
     # Pipes
-    draw.rectangle([4, 40, 12, 56], fill=COLOR_METAL)
-    draw.rectangle([84, 40, 92, 56], fill=COLOR_METAL)
+    d.rectangle([4, 40, 12, 60], fill=METAL)
+    d.rectangle([84, 40, 92, 60], fill=METAL)
+    img.save(BASE + "/blocks/production/crystal-smelter.png")
 
-def draw_crystal_mixer(draw):
-    """3x3 liquid mixer"""
-    # Base structure
-    draw.rectangle([12, 50, 8, 76, 24], fill=COLOR_METAL_DARK)  # pipe
-    # Mixer top (dome)
-    draw.rectangle([16, 20, 80, 32], fill=COLOR_METAL, outline=COLOR_METAL_DARK)
-    # Tank body
-    draw.rectangle([20, 32, 76, 80], fill=COLOR_METAL_DARK, outline=COLOR_METAL)
-    # Liquid inside
-    draw.rectangle([24, 44, 72, 76], fill=(101, 195, 232, 180))
+
+def block_mixer():
+    img = Image.new("RGBA", (96, 96), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    # Top dome
+    d.rectangle([16, 20, 80, 32], fill=METAL)
+    # Tank
+    d.rectangle([20, 32, 76, 80], fill=METAL_D, outline=METAL)
+    # Liquid
+
+    d.rectangle([24, 44, 72, 76], fill=(101, 195, 232, 160))
     # Bubbles
-    for pos in [(30, 52, 4), (44, 48, 3), (58, 56, 5), (66,  (66, 50, 3)]:
-        draw.ellipse([pos[0], pos[1], pos[0]+pos[2], pos[1]+pos[2]], fill=COLOR_WHITE)
-    # Agitator shaft
-    draw.rectangle([46, 32, 50, 44], fill=COLOR_METAL)
-    # Paddle
-    draw.rectangle([38, 40, 58, 44], fill=COLOR_METAL)
+    for x, y, r in [(30, 52, 4), (44, 48, 3), (58, 56, 5), (60, 50, 3)]:
+        d.ellipse([x, y, x + r, y + r], fill=WHITE)
+    # Agitator
+    d.rectangle([46, 32, 50, 44], fill=METAL)
+    d.rectangle([36, 38, 60, 42], fill=METAL)
+    img.save(BASE + "/blocks/production/crystal-fluid-mixer.png")
 
-def draw_crystal_turret(draw):
-    """3x3 turret"""
+
+def block_turret():
+    img = Image.new("RGBA", (96, 96), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
     # Base
-    draw.rectangle([16, 60, 80, 88], fill=COLOR_METAL_DARK, outline=COLOR_METAL)
-    # Turret body (rotating part)
-    draw.ellipse([20, 36, 76, 72], fill=COLOR_METAL, outline=COLOR_METAL_DARK)
-    # Crystal barrel
-    draw.rectangle([40, 12, 56, 40], fill=COLOR_CRYSTAL_DARK, outline=COLOR_CRYSTAL)
-    # Barrel tip glow
-    draw.rectangle([42, 8, 54, 14], fill=COLOR_CRYSTAL)
-    # Crystal core in body
-    draw.ellipse([36, 46, 60, 66], fill=COLOR_CRYSTAL)
-    draw.ellipse([42, 51, 54, 62], fill=COLOR_WHITE)
-    # Side details
-    draw.rectangle([16, 52, 22, 64], fill=COLOR_METAL)
-    draw.rectangle([74, 52, 80, 64], fill=COLOR_METAL)
-
-def draw_crystal_wall(draw, img_size):
-    """1x1 wall (32x32)"""
-    sz = img_size
-    border = 2
-    # Wall body
-    draw.rectangle([border, border, sz-border-1, sz-border-1], fill=COLOR_CRYSTAL_DARK, outline=COLOR_CRYSTAL)
-    # Crystal pattern- facets
-    draw.polygon([
-        (sz//2, border),  # top mid
-        (sz-border-1, sz//2),  # right mid
-        (sz//2, sz-border-1),  # bottom mid
-        (border, sz//2)  # left mid
-    ], fill=COLOR_CRYSTAL)
-    # Center highlight
-    draw.rectangle gt  #inner glow
-    draw.polygon([
-        (sz//2, sz//4),
-        (3*sz//4, sz//2),
-        (sz//2, 3*sz//4),
-        (sz//4, sz//2)
-    ], fill=(120,210,240,180))
+    d.rectangle([16, 60, 80, 88], fill=METAL_D, outline=METAL)
+    # Rotating body
+    d.ellipse([20, 36, 76, 72], fill=METAL, outline=METAL_D)
+    # Barrel
+    d.rectangle([40, 12, 56, 38], fill=BLUE_D)
+    d.rectangle([42, 8, 54, 14], fill=BLUE)  # tip glow
+    # Crystal core
+    d.ellipse([36, 46, 60, 66], fill=BLUE)
+    d.ellipse([42, 51, 54, 62], fill=(180, 230, 255, 255))
+    # Side mounts
+    d.rectangle([14, 52, 24, 68], fill=METAL)
+    d.rectangle([72, 52, 82, 68], fill=METAL)
+    img.save(BASE + "/blocks/turrets/crystal-turret.png")
 
 
-def draw_rect_list: I see there are multiple syntax errors. Let me rewrite this properly.
+def block_wall():
+    img = Image.new("RGBA", (32, 32), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    # Body
+    d.rectangle([2, 2, 29, 29], fill=BLUE_D, outline=BLUE)
+    # Diamond facet
+    d.polygon([(16, 2), (29, 16), (16, 29), (2, 16)],
+              fill=(81, 155, 215, 255))
+    d.polygon([(16, 6), (26, 16), (16, 26), (6, 16)],
+              fill=(91, 165, 225, 255))
+    d.polygon([(16, 8), (24, 16), (16, 24), (8, 16)],
+              fill=(141, 215, 255, 180))
+    img.save(BASE + "/blocks/defense/crystal-wall.png")
 
-BTW, I need to fix some issues in the script. Let me rewrite it cleanly.
+
+def block_wall_large():
+    """2x2 wall (64x64)"""
+    img = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.rectangle([2, 2, 61, 61], fill=BLUE_D, outline=BLUE, width=2)
+    # 4 quadrants each with a diamond facet
+    for ox, oy in [(0,0), (32,0), (0,32), (32,32)]:
+        cx, cy = ox + 32, oy + 32
+        d.polygon([(ox+16, oy+2), (ox+29, oy+16), (ox+16, oy+29), (ox+2, oy+16)],
+                  fill=(81, 155, 215, 255))
+        d.polygon([(ox+16, oy+6), (ox+26, oy+16), (ox+16, oy+26), (ox+6, oy+16)],
+                  fill=(91, 165, 225, 255))
+    # Cross joint
+    d.rectangle([30, 2, 33, 61], fill=BLUE)
+    d.rectangle([2, 30, 61, 33], fill=BLUE)
+    img.save(BASE + "/blocks/defense/crystal-wall-large.png")
+
+
+def block_borer():
+    """4x4 burst drill (128x128)"""
+    img = Image.new("RGBA", (128, 128), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.rectangle([16, 80, 112, 120], fill=METAL_D, outline=METAL)
+    d.rectangle([24, 44, 104, 84], fill=METAL_D, outline=METAL)
+    # Three drill heads
+    for dx, dy in [(24, 20), (56, 8), (88, 20)]:
+        d.rectangle([dx + 4, dy + 16, dx + 12, dy + 40], fill=METAL)
+        d.polygon([(dx + 2, dy + 16), (dx + 14, dy + 16), (dx + 8, dy)], fill=BLUE)
+        d.rectangle([dx + 2, dy + 4, dx + 14, dy + 10], fill=BLUE_D)
+    # Crystal veins
+    for y in range(52, 80, 6):
+        d.rectangle([32, y, 96, y + 3], fill=BLUE)
+    d.ellipse([52, 52, 76, 76], fill=(101, 195, 232, 100))
+    d.ellipse([58, 58, 70, 70], fill=(180, 230, 255, 150))
+    for x in [20, 100]:
+        d.rectangle([x, 104, x + 12, 120], fill=METAL)
+        d.rectangle([x - 4, 116, x + 16, 120], fill=METAL_D)
+    img.save(BASE + "/blocks/production/crystal-borer.png")
+
+
+if __name__ == "__main__":
+    item_crystal()
+    item_alloy()
+    block_drill()
+    block_smelter()
+    block_mixer()
+    block_turret()
+    block_wall()
+    block_wall_large()
+    block_borer()
+    print("All sprites regenerated!")

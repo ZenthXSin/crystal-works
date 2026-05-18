@@ -1,6 +1,15 @@
 type: Wall
 size: 1
-health: 120
+health: 840
+lightningChance: 0.08
+lightningDamage: 12
+lightningLength: 10
+lightningColor: "65C3E8"
+flashHit: true
+flashColor: "B8F0FF"
+requirements: [crystal/6]
 category: defense
-requirements: [crystal/30, lead/20]
-research: crystal
+research: {
+  parent: crystal
+  requirements: [crystal/30]
+}
