@@ -4,6 +4,7 @@
   "author": "Eve",
   "description": "晶能科技模组 - 新增晶矿及其加工联动\nAdds crystal resource and its processing chain.",
   "version": "1.0.0",
+  "repo": "ZenthXSin/crystal-works",
   "minGameVersion": "146",
   "dependencies": []
 }
