@@ -1,5 +1,9 @@
-color: "65C3E8FF"
-barColor: "65C3E8"
-temperature: 0.2
+type: Liquid
+color: "4A90D9"
 heatCapacity: 1.5
 viscosity: 0.3
+mass: 0.8
+flammability: 0.05
+explosiveness: 0.2
+effect: cryocooling
+research: cryofluid

@@ -1,8 +1,9 @@
-color: "4A8EC7"
+type: Item
+color: "5D8AA8"
 hardness: 1
-explosiveness: 0.3
+explosiveness: 0
 flammability: 0.2
 radioactivity: 0
-charge: 0.8
-cost: 3.5
-research: crystal
+charge: 0.3
+cost: 1.5
+research: lead
