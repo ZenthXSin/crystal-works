@@ -3,6 +3,7 @@ health: 200
 size: 1
 liquidCapacity: 20
 leaks: false
+botColor: "4A90D9"
 requirements: [crystal/10, lead/10]
 category: liquid
 research: crystal-smelter

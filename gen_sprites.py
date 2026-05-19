@@ -248,6 +248,26 @@ d.ellipse([8, 8, 24, 24], fill=r(PC))
 d.ellipse([12, 12, 20, 20], fill=r(PL))
 sv('blocks/transport', 'crystal-conduit-cap.png', im)
 
+# conduit bottoms
+for i in range(5):
+    im = Image.new('RGBA', (32, 32), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    if i == 0:
+        d.rectangle([0, 10, 31, 22], fill=r((40, 56, 64)), outline=r(PC, 80))
+    elif i == 1:
+        d.pieslice([-10, -10, 20, 20], 0, 90, fill=r((40, 56, 64)), outline=r(PC, 80))
+        d.rectangle([10, 0, 22, 10], fill=r((40, 56, 64)))
+        d.rectangle([0, 10, 10, 22], fill=r((40, 56, 64)))
+    elif i == 2:
+        d.rectangle([0, 10, 31, 22], fill=r((40, 56, 64)))
+        d.rectangle([10, 0, 22, 10], fill=r((40, 56, 64)))
+    elif i == 3:
+        d.rectangle([0, 10, 31, 22], fill=r((40, 56, 64)))
+        d.rectangle([10, 0, 22, 31], fill=r((40, 56, 64)))
+    else:
+        d.rectangle([2, 8, 29, 24], fill=r((40, 56, 64)), outline=r(PC, 100))
+    sv('blocks/transport', f'crystal-conduit-bottom-{i}.png', im)
+
 # battery
 im = Image.new('RGBA', (64, 64), (0, 0, 0, 0))
 d = ImageDraw.Draw(im)

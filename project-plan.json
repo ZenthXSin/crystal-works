@@ -6,7 +6,7 @@
   "changelog": "Phase 3: Battery + Conduit (transport/power expansion)",
   "goal": "A small but self-contained JSON mod adding crystal ore and its processing chain",
   "features": {
-    "items": ["crystal", "crystal-alloy", "crystal-shard"],
+    "items": ["crystal", "crystal-alloy"],
     "liquids": ["crystal-fluid"],
     "blocks": {
       "production": {

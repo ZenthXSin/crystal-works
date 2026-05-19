@@ -2,7 +2,7 @@ type: GenericCrafter
 size: 3
 health: 440
 craftTime: 75
-outputLiquid: crystal-fluid/0.3
+outputLiquid: crystal-fluid/0.4
 itemCapacity: 20
 liquidCapacity: 60
 hasItems: true

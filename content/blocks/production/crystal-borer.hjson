@@ -3,7 +3,6 @@ size: 4
 health: 800
 tier: 6
 drillTime: 240
-hardnessDrillMultiplier: 10
 rotateSpeed: -0.6
 warmupSpeed: 0.3
 liquidBoostIntensity: 2.2
