@@ -312,4 +312,45 @@ d.ellipse([12, 12, 52, 52], fill=r(PC, 60))
 d.ellipse([20, 20, 44, 44], fill=r(PL, 30))
 sv('blocks/power', 'crystal-battery-glow.png', im)
 
+# liquid junction (size 1 uses base region only)
+im = Image.new('RGBA', (32, 32), (0, 0, 0, 0))
+d = ImageDraw.Draw(im)
+d.rectangle([0, 0, 31, 31], fill=r(PD), outline=r(PC, 200))
+d.ellipse([8, 8, 24, 24], fill=r(PC, 120))
+d.ellipse([13, 13, 19, 19], fill=r(PL, 100))
+d.polygon([(16, 2), (22, 10), (10, 10)], fill=r(PC, 150))
+d.polygon([(16, 30), (22, 22), (10, 22)], fill=r(PC, 100))
+d.polygon([(2, 16), (10, 22), (10, 10)], fill=r(PC, 120))
+d.polygon([(30, 16), (22, 22), (22, 10)], fill=r(PC, 120))
+sv('blocks/transport', 'crystal-liquid-junction.png', im)
+
+# bridge conduit - base region
+im = Image.new('RGBA', (32, 32), (0, 0, 0, 0))
+d = ImageDraw.Draw(im)
+d.rounded_rectangle([2, 2, 29, 29], radius=4, fill=r(PD), outline=r(PC, 200))
+d.ellipse([8, 8, 24, 24], fill=r(PC, 150))
+d.line([(8, 16), (24, 16)], fill=r(PL, 150), width=2)
+sv('blocks/transport', 'crystal-bridge-conduit.png', im)
+
+# bridge conduit end
+im = Image.new('RGBA', (32, 32), (0, 0, 0, 0))
+d = ImageDraw.Draw(im)
+d.rounded_rectangle([4, 6, 28, 26], radius=3, fill=r(PD), outline=r(PC, 200))
+d.ellipse([10, 10, 22, 22], fill=r(PC, 150))
+d.rectangle([20, 12, 28, 20], fill=r(PC, 120))
+sv('blocks/transport', 'crystal-bridge-conduit-end.png', im)
+
+# bridge conduit bridge (span)
+im = Image.new('RGBA', (32, 32), (0, 0, 0, 0))
+d = ImageDraw.Draw(im)
+d.rectangle([0, 13, 31, 19], fill=r(PD, 200), outline=r(PC, 150))
+d.line([(2, 16), (29, 16)], fill=r(PL, 120), width=1)
+sv('blocks/transport', 'crystal-bridge-conduit-bridge.png', im)
+
+# bridge conduit arrow
+im = Image.new('RGBA', (16, 16), (0, 0, 0, 0))
+d = ImageDraw.Draw(im)
+d.polygon([(2, 8), (14, 2), (14, 14)], fill=r(PC, 180), outline=r(PL, 120))
+sv('blocks/transport', 'crystal-bridge-conduit-arrow.png', im)
+
 print("ALL DONE")

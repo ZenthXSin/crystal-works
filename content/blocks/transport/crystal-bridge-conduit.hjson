@@ -1,0 +1,9 @@
+type: LiquidBridge
+size: 1
+health: 200
+range: 10
+hasPower: false
+liquidCapacity: 20
+requirements: [crystal/15, lead/20, graphite/10]
+category: liquid
+research: crystal-conduit
