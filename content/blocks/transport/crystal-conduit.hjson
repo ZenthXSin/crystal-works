@@ -1,11 +1,8 @@
 type: Conduit
 health: 200
 size: 1
-rotateSpeed: 1.0
 liquidCapacity: 20
-hasItems: false
-hasLiquids: true
-pumpAmount: 0.2
+leaks: false
 requirements: [crystal/10, lead/10]
-category: distribution
-research: crystal-drill
+category: liquid
+research: crystal-smelter

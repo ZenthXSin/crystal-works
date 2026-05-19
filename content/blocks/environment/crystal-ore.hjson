@@ -1,6 +1,7 @@
 type: OreBlock
 itemDrop: crystal
-variants: 3
-mapColor: "65C3E8"
+mapColor: "65C3E8FF"
 useColor: true
-solid: true
+oreDefault: true
+oreThreshold: 0.82
+oreScale: 30

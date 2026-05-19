@@ -2,18 +2,24 @@
   "project": "crystal-works",
   "displayName": "晶工 - Crystal Works",
   "language": "JSON/Hjson (pure)",
-  "version": "1.1.0",
-  "changelog": "Phase 2: Balance overhaul + new content (turret, wall, mixer)",
+  "version": "1.2.0",
+  "changelog": "Phase 3: Battery + Conduit (transport/power expansion)",
   "goal": "A small but self-contained JSON mod adding crystal ore and its processing chain",
   "features": {
     "items": ["crystal", "crystal-alloy", "crystal-shard"],
     "liquids": ["crystal-fluid"],
     "blocks": {
       "production": {
-        "crystal-drill": "Drill - tier 4, improved balance",
+        "crystal-drill": "Drill - tier 5, balanced",
         "crystal-smelter": "GenericCrafter - crystal + lead -> crystal-alloy",
         "crystal-fluid-mixer": "GenericCrafter - crystal + water -> crystal-fluid",
-        "crystal-borer": "BurstDrill - tier 5, higher throughput"
+        "crystal-borer": "BurstDrill - tier 6, higher throughput"
+      },
+      "power": {
+        "crystal-battery": "Battery - crystal energy storage, capacity 12000"
+      },
+      "transport": {
+        "crystal-conduit": "Conduit - crystal fluid pipe"
       },
       "turrets": {
         "crystal-turret": "ItemTurret - crystal bolts + shock effects"
@@ -31,7 +37,7 @@
     },
     "bundles": ["en (bundle.properties)", "zh_CN (bundle_zh_CN.properties)"],
     "sprites": "generated placeholder squares",
-    "research": "crystal -> crystal-alloy -> blocks -> turret/wall"
+    "research": "crystal -> crystal-alloy -> blocks -> turret/wall -> battery/conduit"
   },
   "balance_overhaul_v1.1": {
     "crystal_drill": {
@@ -66,7 +72,8 @@
     "implemented_v1.0": ["crystal", "crystal-fluid", "crystal-alloy", "crystal-drill", "crystal-smelter"],
     "updated_v1.1": ["crystal-drill (balanced)", "crystal-smelter (balanced)", "crystal-alloy (hardness fix)", "crystal-fluid (rebalanced)", "crystal (hardness fix)"],
     "new_v1.1": ["crystal-fluid-mixer", "crystal-turret", "crystal-wall", "crystal-wall-large", "crystal-borer", "crystal-shock-status"],
-    "planned_v1.2": ["crystal-battery", "crystal-conduit", "crystal-armor-unit"]
+    "new_v1.2": ["crystal-battery", "crystal-conduit"],
+    "planned_future": ["crystal-armor-unit (requires Java/Kotlin)"]
   },
   "references": [
     "Allure (HJSON organization pattern)",

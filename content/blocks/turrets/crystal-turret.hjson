@@ -1,63 +1,48 @@
 type: ItemTurret
 size: 2
-health: 1200
-reload: 40
-range: 220
-recoil: 2
-recoilTime: 30
-cooldownTime: 30
-shootCone: 8
-rotateSpeed: 5
+health: 960
+reload: 35
+range: 210
 maxAmmo: 60
-ammoPerShot: 2
+recoilTime: 10
+recoil: 1.5
 shootSound: laser
-shake: 1.5
-targetAir: true
+ammoPerShot: 2
 targetGround: true
+targetAir: true
+inaccuracy: 2
+rotateSpeed: 8
+consumes: {
+  power: 2.5
+}
+shoot: {
+  shots: 1
+  shotDelay: 0
+}
 ammoTypes: {
   crystal: {
-    type: BasicBulletType
-    speed: 5
-    damage: 22
-    lifetime: 44
-    width: 7
-    height: 9
-    shootEffect: shootSmall
-    smokeEffect: shootSmallSmoke
-    hitEffect: hitLaser
-    despawnEffect: hitLaser
+    speed: 7.0
+    damage: 28
+    lifetime: 30
+    width: 8
+    height: 12
     ammoMultiplier: 3
-    backColor: "65C3E8"
-    frontColor: "B8F0FF"
-    trailColor: "65C3E880"
-    trailChance: 0.3
     status: crystal-shock
-    statusDuration: 60
-    buildingDamageMultiplier: 0.5
-  }
-  crystal-alloy: {
-    type: BasicBulletType
-    speed: 6
-    damage: 38
-    lifetime: 44
-    width: 9
-    height: 11
-    shootEffect: shootSmall
-    smokeEffect: shootSmallSmoke
-    hitEffect: hitMeltdown
-    despawnEffect: hitMeltdown
-    ammoMultiplier: 2
+    statusDuration: 120
+    hitEffect: hitLancer
+    despawnEffect: hitLancer
+    frontColor: "65C3E8"
     backColor: "4A8EC7"
-    frontColor: "8CC4F0"
-    trailColor: "4A8EC7C0"
-    trailChance: 0.4
-    splashDamage: 18
-    splashDamageRadius: 24
-    status: crystal-shock
-    statusDuration: 90
-    buildingDamageMultiplier: 0.6
+    hitColor: "65C3E8"
+    trailLength: 8
+    trailWidth: 4
+    trailColor: "65C3E8"
+    lightning: 3
+    lightningDamage: 10
+    lightningLength: 15
+    lightningLengthRand: 10
   }
 }
-requirements: [copper/100, lead/75, crystal/40, graphite/50]
+requirements: [copper/90, lead/60, crystal/35, silicon/40]
 category: turret
-research: crystal-drill
+research: crystal

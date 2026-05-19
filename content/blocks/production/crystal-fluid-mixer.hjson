@@ -1,8 +1,14 @@
 type: GenericCrafter
 size: 3
-health: 480
-craftTime: 60
+health: 440
+craftTime: 75
 outputLiquid: crystal-fluid/0.3
+itemCapacity: 20
+liquidCapacity: 60
+hasItems: true
+hasLiquids: true
+hasPower: true
+outputsLiquid: true
 drawer: {
   type: DrawMulti
   drawers: [
@@ -13,6 +19,11 @@ drawer: {
       type: DrawLiquidTile
       drawLiquid: crystal-fluid
     }
+    {
+      type: DrawGlowRegion
+      color: "65C3E8"
+      alpha: 0.7
+    }
   ]
 }
 consumes: {
@@ -21,10 +32,8 @@ consumes: {
     liquid: water
     amount: 0.5
   }
-  power: 1.8
+  power: 2.0
 }
-requirements: [copper/100, lead/60, crystal/20, graphite/30]
+requirements: [copper/100, lead/70, crystal/25]
 category: crafting
-research: crystal
-hasLiquids: true
-liquidCapacity: 20
+research: crystal-smelter
