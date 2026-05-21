@@ -1,0 +1,48 @@
+type: LiquidTurret
+size: 2
+health: 880
+reload: 10
+range: 170
+shootSound: shootLaser
+shootEffect: none
+smokeEffect: none
+extinguish: false
+targetGround: true
+targetAir: true
+inaccuracy: 3
+rotateSpeed: 7
+liquidCapacity: 30
+consumes: {
+  power: 3.0
+}
+shoot: {
+  shots: 1
+  shotDelay: 0
+  shootShake: 1.0
+}
+ammoTypes: {
+  crystal-fluid: {
+    type: basic
+    speed: 6.0
+    damage: 15
+    lifetime: 28
+    width: 6
+    height: 10
+    ammoMultiplier: 4
+    frontColor: "65C3E8"
+    backColor: "4A90D9"
+    hitEffect: hitMeltdown
+    despawnEffect: hitMeltdown
+    trailLength: 6
+    trailWidth: 3
+    trailColor: "65C3E8"
+    status: melting
+    statusDuration: 60
+  }
+}
+requirements: [crystal/40, lead/50, silicon/30, titanium/20]
+category: turret
+research: {
+  parent: crystal-turret
+  requirements: [crystal-fluid/20]
+}

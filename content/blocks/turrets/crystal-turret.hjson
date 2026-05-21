@@ -6,7 +6,7 @@ range: 210
 maxAmmo: 60
 recoilTime: 10
 recoil: 1.5
-shootSound: laser
+shootSound: shootLaser
 ammoPerShot: 2
 targetGround: true
 targetAir: true
@@ -45,4 +45,7 @@ ammoTypes: {
 }
 requirements: [copper/90, lead/60, crystal/35, silicon/40]
 category: turret
-research: crystal
+research: {
+  parent: crystal-smelter
+  requirements: [crystal/40]
+}

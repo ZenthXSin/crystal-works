@@ -80,6 +80,21 @@ d.polygon([(26, 6), (32, 2), (38, 6), (32, 10)], fill=r(PL))
 d.ellipse([28, 4, 36, 12], fill=r(PD))
 sv('blocks/turrets', 'crystal-turret.png', im)
 
+# fluid turret (LiquidTurret, size 2)
+im = Image.new('RGBA', (64, 64), (0, 0, 0, 0))
+d = ImageDraw.Draw(im)
+d.ellipse([4, 16, 60, 60], fill=r(PD), outline=r(PC, 180))
+d.ellipse([12, 24, 52, 52], fill=r((0x3A, 0x6A, 0x88)), outline=r(PC, 120))
+d.ellipse([22, 34, 42, 54], fill=r(PC, 80))
+d.polygon([(28, 6), (36, 6), (36, 22), (28, 22)], fill=r(PC), outline=r(PL, 200))
+d.ellipse([28, 4, 36, 12], fill=r(PL))
+d.rectangle([30, 22, 34, 28], fill=r(PC))
+for i in range(6):
+    a = math.radians(i * 60)
+    dx, dy = 32 + 8 * math.cos(a), 32 + 8 * math.sin(a)
+    d.ellipse([dx - 2, dy - 2, dx + 2, dy + 2], fill=r(PL, 100))
+sv('blocks/turrets', 'crystal-fluid-turret.png', im)
+
 # smelter
 im = Image.new('RGBA', (96, 96), (0, 0, 0, 0))
 d = ImageDraw.Draw(im)
@@ -352,5 +367,33 @@ im = Image.new('RGBA', (16, 16), (0, 0, 0, 0))
 d = ImageDraw.Draw(im)
 d.polygon([(2, 8), (14, 2), (14, 14)], fill=r(PC, 180), outline=r(PL, 120))
 sv('blocks/transport', 'crystal-bridge-conduit-arrow.png', im)
+
+# generator (ConsumeGenerator, size 2)
+im = Image.new('RGBA', (64, 64), (0, 0, 0, 0))
+d = ImageDraw.Draw(im)
+d.rounded_rectangle([2, 2, 61, 61], radius=6, fill=r((0x3A, 0x6A, 0x88)), outline=r(PC, 200))
+d.ellipse([8, 8, 56, 56], fill=r(PD), outline=r(PC, 150))
+d.ellipse([20, 20, 44, 44], fill=r(PC, 100))
+d.polygon([(32, 4), (38, 16), (26, 16)], fill=r(PC, 200))
+d.polygon([(32, 60), (38, 48), (26, 48)], fill=r(PC, 150))
+d.polygon([(4, 32), (16, 38), (16, 26)], fill=r(PC, 120))
+d.polygon([(60, 32), (48, 38), (48, 26)], fill=r(PC, 120))
+for i in range(4):
+    a = math.radians(i * 90 + 45)
+    dx, dy = 32 + 12 * math.cos(a), 32 + 12 * math.sin(a)
+    d.ellipse([dx - 3, dy - 3, dx + 3, dy + 3], fill=r(PL, 80))
+sv('blocks/power', 'crystal-generator.png', im)
+
+# generator top
+im = Image.new('RGBA', (64, 64), (0, 0, 0, 0))
+d = ImageDraw.Draw(im)
+d.ellipse([18, 18, 46, 46], fill=r(PD, 150))
+d.ellipse([24, 24, 40, 40], fill=r(PC, 120))
+d.ellipse([30, 30, 34, 34], fill=r(PL, 180))
+for i in range(8):
+    a = math.radians(i * 45)
+    d.line([(32 + 20 * math.cos(a), 32 + 20 * math.sin(a)),
+            (32 + 24 * math.cos(a), 32 + 24 * math.sin(a))], fill=r(PL, 120), width=1)
+sv('blocks/power', 'crystal-generator-top.png', im)
 
 print("ALL DONE")
