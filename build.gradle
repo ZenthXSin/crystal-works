@@ -9,7 +9,7 @@ buildscript{
     }
 
     ext{
-        mindustryVersion = 'v157.4'
+        mindustryVersion = 'v155.4'
         kotlinVersion = "2.2.0"
         sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
         isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
@@ -90,10 +90,6 @@ jar{
         include "mod.json"
     }
 
-    from("content") {
-        include "**"
-        into("content")
-    }
 
     from("sprites") {
         include "**"

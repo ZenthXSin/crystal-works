@@ -1,7 +1,0 @@
-type: LiquidJunction
-size: 1
-health: 120
-liquidCapacity: 12
-requirements: [crystal/8, lead/10]
-category: liquid
-research: crystal-conduit
