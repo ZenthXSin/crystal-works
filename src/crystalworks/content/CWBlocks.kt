@@ -51,7 +51,7 @@ object CWBlocks {
     lateinit var crystalWallLarge: Block
 
     fun load() {
-        crystalOre = OreBlock("crystal-ore").apply {
+        crystalOre = OreBlock("crystal-works-crystal-ore").apply {
             itemDrop = CWItems.crystal
             mapColor = Color.valueOf("65C3E8FF")
             useColor = true
@@ -60,7 +60,7 @@ object CWBlocks {
             oreScale = 30f
         }
 
-        crystalDrill = Drill("crystal-drill").apply {
+        crystalDrill = Drill("crystal-works-crystal-drill").apply {
             size = 3
             health = 540
             tier = 5
@@ -76,7 +76,7 @@ object CWBlocks {
             requirements(Category.production, ItemStack.with(Items.copper, 80, Items.lead, 60, CWItems.crystal, 30))
         }
 
-        crystalBorer = BurstDrill("crystal-borer").apply {
+        crystalBorer = BurstDrill("crystal-works-crystal-borer").apply {
             size = 4
             health = 800
             tier = 6
@@ -93,7 +93,7 @@ object CWBlocks {
             requirements(Category.production, ItemStack.with(Items.copper, 200, Items.lead, 150, CWItems.crystal, 100, Items.graphite, 60))
         }
 
-        crystalSmelter = GenericCrafter("crystal-smelter").apply {
+        crystalSmelter = GenericCrafter("crystal-works-crystal-smelter").apply {
             size = 3
             health = 440
             craftTime = 100f
@@ -111,7 +111,7 @@ object CWBlocks {
             requirements(Category.crafting, ItemStack.with(Items.copper, 120, Items.lead, 80, Items.graphite, 40))
         }
 
-        crystalFluidMixer = GenericCrafter("crystal-fluid-mixer").apply {
+        crystalFluidMixer = GenericCrafter("crystal-works-crystal-fluid-mixer").apply {
             size = 3
             health = 440
             craftTime = 75f
@@ -136,7 +136,7 @@ object CWBlocks {
             requirements(Category.crafting, ItemStack.with(Items.copper, 100, Items.lead, 70, CWItems.crystal, 25))
         }
 
-        crystalBattery = Battery("crystal-battery").apply {
+        crystalBattery = Battery("crystal-works-crystal-battery").apply {
             size = 2
             health = 640
             conductivePower = true
@@ -156,7 +156,7 @@ object CWBlocks {
             requirements(Category.power, ItemStack.with(CWItems.crystal, 50, Items.lead, 80, Items.silicon, 40, Items.graphite, 30))
         }
 
-        crystalGenerator = ConsumeGenerator("crystal-generator").apply {
+        crystalGenerator = ConsumeGenerator("crystal-works-crystal-generator").apply {
             size = 2
             health = 640
             powerProduction = 3.0f
@@ -178,7 +178,7 @@ object CWBlocks {
             requirements(Category.power, ItemStack.with(CWItems.crystal, 40, Items.lead, 60, Items.silicon, 30, Items.graphite, 20))
         }
 
-        crystalPowerNode = PowerNode("crystal-power-node").apply {
+        crystalPowerNode = PowerNode("crystal-works-crystal-power-node").apply {
             size = 1
             health = 180
             maxNodes = 12
@@ -191,7 +191,7 @@ object CWBlocks {
             requirements(Category.power, ItemStack.with(CWItems.crystal, 8, Items.lead, 12, Items.silicon, 6))
         }
 
-        crystalBeamTower = BeamNode("crystal-beam-tower").apply {
+        crystalBeamTower = BeamNode("crystal-works-crystal-beam-tower").apply {
             size = 2
             health = 720
             range = 18
@@ -208,7 +208,7 @@ object CWBlocks {
             requirements(Category.power, ItemStack.with(CWItems.crystalAlloy, 45, CWItems.crystal, 80, Items.silicon, 55, Items.graphite, 35))
         }
 
-        crystalConduit = Conduit("crystal-conduit").apply {
+        crystalConduit = Conduit("crystal-works-crystal-conduit").apply {
             health = 200
             size = 1
             liquidCapacity = 20f
@@ -217,7 +217,7 @@ object CWBlocks {
             requirements(Category.liquid, ItemStack.with(CWItems.crystal, 10, Items.lead, 10))
         }
 
-        crystalBridgeConduit = LiquidBridge("crystal-bridge-conduit").apply {
+        crystalBridgeConduit = LiquidBridge("crystal-works-crystal-bridge-conduit").apply {
             size = 1
             health = 200
             range = 10
@@ -226,14 +226,14 @@ object CWBlocks {
             requirements(Category.liquid, ItemStack.with(CWItems.crystal, 15, Items.lead, 20, Items.graphite, 10))
         }
 
-        crystalLiquidJunction = LiquidJunction("crystal-liquid-junction").apply {
+        crystalLiquidJunction = LiquidJunction("crystal-works-crystal-liquid-junction").apply {
             size = 1
             health = 120
             liquidCapacity = 12f
             requirements(Category.liquid, ItemStack.with(CWItems.crystal, 8, Items.lead, 10))
         }
 
-        crystalTurret = ItemTurret("crystal-turret").apply {
+        crystalTurret = ItemTurret("crystal-works-crystal-turret").apply {
             size = 2
             health = 960
             reload = 35f
@@ -271,7 +271,7 @@ object CWBlocks {
             requirements(Category.turret, ItemStack.with(Items.copper, 90, Items.lead, 60, CWItems.crystal, 35, Items.silicon, 40))
         }
 
-        crystalFluidTurret = LiquidTurret("crystal-fluid-turret").apply {
+        crystalFluidTurret = LiquidTurret("crystal-works-crystal-fluid-turret").apply {
             size = 2
             health = 880
             reload = 10f
@@ -304,7 +304,7 @@ object CWBlocks {
             requirements(Category.turret, ItemStack.with(CWItems.crystal, 40, Items.lead, 50, Items.silicon, 30, Items.titanium, 20))
         }
 
-        crystalWall = Wall("crystal-wall").apply {
+        crystalWall = Wall("crystal-works-crystal-wall").apply {
             size = 1
             health = 840
             lightningChance = 0.08f
@@ -316,7 +316,7 @@ object CWBlocks {
             requirements(Category.defense, ItemStack.with(CWItems.crystal, 6))
         }
 
-        crystalWallLarge = Wall("crystal-wall-large").apply {
+        crystalWallLarge = Wall("crystal-works-crystal-wall-large").apply {
             size = 2
             health = 1680
             lightningChance = 0.12f

@@ -7,7 +7,7 @@ object CWStatusEffects {
     lateinit var crystalShock: StatusEffect
 
     fun load() {
-        crystalShock = StatusEffect("crystal-shock").apply {
+        crystalShock = StatusEffect("crystal-works-crystal-shock").apply {
             color = Color.valueOf("65C3E8")
             damageMultiplier = 0.7f
             speedMultiplier = 0.6f
