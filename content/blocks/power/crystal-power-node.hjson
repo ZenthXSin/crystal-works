@@ -1,0 +1,16 @@
+type: PowerNode
+size: 1
+health: 180
+maxNodes: 12
+laserRange: 9
+laserColor1: "B8F0FF"
+laserColor2: "65C3E8"
+conductivePower: true
+underBullets: true
+crushFragile: true
+requirements: [crystal/8, lead/12, silicon/6]
+category: power
+research: {
+  parent: crystal-battery
+  requirements: [crystal/25, lead/40, silicon/20]
+}

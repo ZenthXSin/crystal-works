@@ -2,7 +2,7 @@
 
 A JSON mod adding crystal resource chain to Mindustry. Crystal ore, alloys, fluid cooling, turrets, and walls.
 
-## Contents (v1.1.0)
+## Contents (v1.5.0)
 
 ### Items
 - **Crystal** — Blue mineral, hardness 4, high charge
@@ -24,6 +24,10 @@ A JSON mod adding crystal resource chain to Mindustry. Crystal ore, alloys, flui
 | Defense | Crystal Wall | Wall (size 1) | Lightning retaliate on hit |
 | Defense | Large Crystal Wall | Wall (size 2) | Higher lightning chance/damage |
 | Transport | Crystal Conduit | Conduit | Reduced-friction fluid pipe |
+| Power | Crystal Battery | Battery | 12000 power storage |
+| Power | Crystal Generator | ConsumeGenerator | Crystal-alloy fueled generation |
+| Power | Crystal Power Node | PowerNode | Local power grid connector |
+| Power | Crystal Beam Tower | BeamNode | Buffered straight-line power bridge |
 
 ### Status Effects
 - **Crystal Shock** — Speed debuff + damage over time
@@ -38,7 +42,11 @@ plastanium
        │    │    ├─ crystal-conduit
        │    │    └─ crystal-borer
        │    ├─ crystal-smelter
-       │    └─ crystal-fluid-mixer
+       │    ├─ crystal-fluid-mixer
+       │    ├─ crystal-battery
+       │    │    ├─ crystal-power-node
+       │    │    └─ crystal-generator
+       │    │         └─ crystal-beam-tower
        ├─ crystal-turret
        └─ crystal-wall → crystal-wall-large
 ```
@@ -54,7 +62,7 @@ python3 gen_sprites.py                    # regenerate all sprites
 cd .. && zip -r crystal-works.zip crystal-works/ -x "crystal-works/.git/*"
 ```
 
-Version: 1.1.0  
+Version: 1.5.0  
 Language: Hjson (pure JSON mod)  
 Author: Eve  
 Repository: [ZenthXSin/crystal-works](https://github.com/ZenthXSin/crystal-works)

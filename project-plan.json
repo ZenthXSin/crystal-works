@@ -2,8 +2,8 @@
   "project": "crystal-works",
   "displayName": "晶工 - Crystal Works",
   "language": "JSON/Hjson (pure)",
-  "version": "1.4.0",
-  "changelog": "Phase 5: Crystal Generator + Crystal Fluid Turret - complete fluid combat chain",
+  "version": "1.5.0",
+  "changelog": "Phase 6: Crystal power nodes and beam tower - complete power distribution chain",
   "goal": "A small but self-contained JSON mod adding crystal ore and its processing chain",
   "features": {
     "items": ["crystal", "crystal-alloy"],
@@ -17,7 +17,9 @@
       },
       "power": {
         "crystal-battery": "Battery - crystal energy storage, capacity 12000",
-        "crystal-generator": "ConsumeGenerator - crystal-alloy -> power, 3.0/s"
+        "crystal-generator": "ConsumeGenerator - crystal-alloy -> power, 3.0/s",
+        "crystal-power-node": "PowerNode - compact local crystal grid connector",
+        "crystal-beam-tower": "BeamNode - buffered long-line power bridge"
       },
       "transport": {
         "crystal-conduit": "Conduit - crystal fluid pipe",
@@ -50,6 +52,7 @@
     "new_v1.2": ["crystal-battery", "crystal-conduit"],
     "new_v1.3": ["crystal-bridge-conduit", "crystal-liquid-junction"],
     "new_v1.4": ["crystal-generator", "crystal-fluid-turret"],
+    "new_v1.5": ["crystal-power-node", "crystal-beam-tower"],
     "planned_future": ["crystal-armor-unit (requires Java/Kotlin)"]
   },
   "balance_overhaul_v1.1": {

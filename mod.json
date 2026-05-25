@@ -3,7 +3,7 @@
   "displayName": "晶工",
   "author": "Eve",
   "description": "晶能科技模组 - 新增晶矿及其加工联动，炮塔/防御系统\nCrystal Works - Crystal ore and its processing chain, turret/defense systems.",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "repo": "ZenthXSin/crystal-works",
   "main": "crystalworks.CrystalWorksMod",
   "minGameVersion": "146",

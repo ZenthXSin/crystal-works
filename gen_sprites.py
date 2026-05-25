@@ -396,4 +396,28 @@ for i in range(8):
             (32 + 24 * math.cos(a), 32 + 24 * math.sin(a))], fill=r(PL, 120), width=1)
 sv('blocks/power', 'crystal-generator-top.png', im)
 
-print("ALL DONE")
+
+# power node
+im = Image.new('RGBA', (32, 32), (0, 0, 0, 0))
+d = ImageDraw.Draw(im)
+d.rounded_rectangle([2, 2, 29, 29], radius=4, fill=r((0x2C, 0x5C, 0x9A)), outline=r(PC, 200))
+d.ellipse([8, 8, 24, 24], fill=r(PD), outline=r(PL, 160))
+d.ellipse([13, 13, 19, 19], fill=r(PL, 220))
+for i in range(4):
+    a = math.radians(i * 90)
+    d.line([(16, 16), (16 + 12 * math.cos(a), 16 + 12 * math.sin(a))], fill=r(PC, 160), width=2)
+sv('blocks/power', 'crystal-power-node.png', im)
+
+# beam tower
+im = Image.new('RGBA', (64, 64), (0, 0, 0, 0))
+d = ImageDraw.Draw(im)
+d.rounded_rectangle([4, 4, 59, 59], radius=5, fill=r((0x2C, 0x5C, 0x9A)), outline=r(PC, 220))
+d.rectangle([12, 28, 52, 36], fill=r(PD), outline=r(PL, 160))
+d.rectangle([28, 12, 36, 52], fill=r(PD), outline=r(PL, 160))
+d.ellipse([18, 18, 46, 46], fill=r(PC, 100), outline=r(PL, 180))
+d.ellipse([26, 26, 38, 38], fill=r(PL, 180))
+for i in range(4):
+    a = math.radians(i * 90 + 45)
+    x, y = 32 + 18 * math.cos(a), 32 + 18 * math.sin(a)
+    d.polygon([(x, y - 4), (x + 4, y), (x, y + 4), (x - 4, y)], fill=r(PC, 150))
+sv('blocks/power', 'crystal-beam-tower.png', im)

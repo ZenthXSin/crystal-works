@@ -1,0 +1,22 @@
+type: BeamNode
+size: 2
+health: 720
+range: 18
+consumesPower: true
+outputsPower: true
+conductivePower: true
+laserWidth: 0.55
+laserColor1: "B8F0FF"
+laserColor2: "65C3E8"
+pulseScl: 18
+pulseMag: 0.12
+underBullets: true
+consumes: {
+  powerBuffered: 18000
+}
+requirements: [crystal-alloy/45, crystal/80, silicon/55, graphite/35]
+category: power
+research: {
+  parent: crystal-generator
+  requirements: [crystal-alloy/60, silicon/50]
+}
