@@ -121,9 +121,9 @@ class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
         hasItems = hasItems || recipes.any { it.inputItems.isNotEmpty() || it.outputItems.isNotEmpty() }
         hasPower = hasPower || recipes.any { it.powerUse > 0f }
         outputsPayload = recipes.any { it.outputPayload != null }
-        // populate liquidFilter so acceptLiquid (in BuildingComp) accepts all recipe input liquids
-        for (r in recipes) for (ls in r.inputLiquids) liquidFilter[ls.liquid.id.toInt()] = true
         super.init()
+        // populate liquidFilter after super.init() allocates the array (Block.init() creates new boolean[content.liquids().size])
+        for (r in recipes) for (ls in r.inputLiquids) liquidFilter[ls.liquid.id.toInt()] = true
     }
 
     override fun load() {
