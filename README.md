@@ -2,7 +2,7 @@
 
 A JSON mod adding crystal resource chain to Mindustry. Crystal ore, alloys, fluid cooling, turrets, and walls.
 
-## Contents (v1.6.0)
+## Contents (v1.7.0)
 
 ### Items
 - **Crystal** — Blue mineral, hardness 4, high charge
@@ -63,14 +63,14 @@ python3 gen_sprites.py                    # regenerate all sprites
 cd .. && zip -r crystal-works.zip crystal-works/ -x "crystal-works/.git/*"
 ```
 
-Version: 1.6.0  
+Version: 1.7.0  
 Language: Kotlin JVM mod  
 Author: Eve  
 Repository: [ZenthXSin/crystal-works](https://github.com/ZenthXSin/crystal-works)
 
 ## 更新日志 / Changelog
 
-### v1.6.0
+### v1.7.0
 - 新增 **晶体装配机 / Crystal Assembler**
 - 支持 1-4 线程切换，线程数会提高生产速度并同步提高动态耗电
 - 支持多配方切换：晶合金批处理、晶流体批处理、晶墙载荷装配
