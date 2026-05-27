@@ -2,7 +2,7 @@
 
 A JSON mod adding crystal resource chain to Mindustry. Crystal ore, alloys, fluid cooling, turrets, and walls.
 
-## Contents (v1.5.0)
+## Contents (v1.6.0)
 
 ### Items
 - **Crystal** — Blue mineral, hardness 4, high charge
@@ -19,6 +19,7 @@ A JSON mod adding crystal resource chain to Mindustry. Crystal ore, alloys, flui
 | Production | Crystal Drill | Drill (tier 5, size 3) | Mines crystals with liquid boost |
 | Production | Crystal Smelter | GenericCrafter (size 3) | crystal + lead → crystal-alloy |
 | Production | Crystal Fluid Mixer | GenericCrafter (size 3) | crystal + water → crystal-fluid |
+| Production | Crystal Assembler / 晶体装配机 | CrystalMultiCrafter (size 4) | 多配方、1-4线程、物品/液体/载荷输入输出 |
 | Production | Crystal Borer | BurstDrill (tier 6, size 4) | High-speed burst mining |
 | Turrets | Crystal Turret | ItemTurret (size 2) | Crystal bolts + lightning + shock |
 | Defense | Crystal Wall | Wall (size 1) | Lightning retaliate on hit |
@@ -62,7 +63,16 @@ python3 gen_sprites.py                    # regenerate all sprites
 cd .. && zip -r crystal-works.zip crystal-works/ -x "crystal-works/.git/*"
 ```
 
-Version: 1.5.0  
-Language: Hjson (pure JSON mod)  
+Version: 1.6.0  
+Language: Kotlin JVM mod  
 Author: Eve  
 Repository: [ZenthXSin/crystal-works](https://github.com/ZenthXSin/crystal-works)
+
+## 更新日志 / Changelog
+
+### v1.6.0
+- 新增 **晶体装配机 / Crystal Assembler**
+- 支持 1-4 线程切换，线程数会提高生产速度并同步提高动态耗电
+- 支持多配方切换：晶合金批处理、晶流体批处理、晶墙载荷装配
+- 支持常规物品/液体消耗与输出，也支持 payload 输入和 payload 输出
+- 补全配置 UI、进度/线程状态条、配方统计展示和中英文文本

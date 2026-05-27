@@ -4,6 +4,7 @@ import arc.graphics.Color
 import mindustry.content.Fx
 import mindustry.gen.Sounds
 import mindustry.content.Items
+import mindustry.content.Blocks
 import mindustry.content.Liquids
 import mindustry.content.StatusEffects
 import mindustry.entities.bullet.BasicBulletType
@@ -25,6 +26,7 @@ import mindustry.world.blocks.power.PowerNode
 import mindustry.world.blocks.production.BurstDrill
 import mindustry.world.blocks.production.Drill
 import mindustry.world.blocks.production.GenericCrafter
+import crystalworks.world.blocks.production.CrystalMultiCrafter
 import mindustry.world.draw.DrawCrucibleFlame
 import mindustry.world.draw.DrawDefault
 import mindustry.world.draw.DrawGlowRegion
@@ -38,6 +40,7 @@ object CWBlocks {
     lateinit var crystalBorer: Block
     lateinit var crystalSmelter: Block
     lateinit var crystalFluidMixer: Block
+    lateinit var crystalAssembler: Block
     lateinit var crystalBattery: Block
     lateinit var crystalGenerator: Block
     lateinit var crystalPowerNode: Block
@@ -134,6 +137,59 @@ object CWBlocks {
             consumeLiquid(Liquids.water, 0.5f)
             consumePower(2.0f)
             requirements(Category.crafting, ItemStack.with(Items.copper, 100, Items.lead, 70, CWItems.crystal, 25))
+        }
+
+
+
+        crystalAssembler = CrystalMultiCrafter("crystal-works-crystal-assembler").apply {
+            size = 4
+            health = 980
+            itemCapacity = 80
+            liquidCapacity = 90f
+            payloadSpeed = 1.1f
+            payloadRotateSpeed = 6f
+            maxThreads = 4
+            updateEffect = Fx.generatespark
+            drawer = DrawMulti(
+                DrawDefault(),
+                mindustry.world.draw.DrawRegion("-top"),
+                DrawGlowRegion().apply {
+                    color = Color.valueOf("65C3E8")
+                    alpha = 0.45f
+                }
+            )
+            recipes.addAll(
+                CrystalMultiCrafter.Recipe(
+                    name = "alloy-batch",
+                    icon = CWItems.crystalAlloy,
+                    craftTime = 150f,
+                    inputItems = ItemStack.with(CWItems.crystal, 6, Items.lead, 8, Items.graphite, 2),
+                    inputLiquids = arrayOf(LiquidStack(Liquids.water, 0.25f)),
+                    outputItems = ItemStack.with(CWItems.crystalAlloy, 4),
+                    powerUse = 2.8f
+                ),
+                CrystalMultiCrafter.Recipe(
+                    name = "fluid-batch",
+                    icon = CWLiquids.crystalFluid,
+                    craftTime = 120f,
+                    inputItems = ItemStack.with(CWItems.crystal, 3, Items.metaglass, 1),
+                    inputLiquids = arrayOf(LiquidStack(Liquids.water, 0.55f)),
+                    outputLiquids = arrayOf(LiquidStack(CWLiquids.crystalFluid, 0.65f)),
+                    powerUse = 2.4f
+                ),
+                CrystalMultiCrafter.Recipe(
+                    name = "payload-wall",
+                    icon = crystalWallLarge,
+                    craftTime = 360f,
+                    inputItems = ItemStack.with(CWItems.crystalAlloy, 8, Items.silicon, 6),
+                    inputLiquids = arrayOf(LiquidStack(CWLiquids.crystalFluid, 0.12f)),
+                    inputPayloads = mindustry.type.PayloadStack.list(Blocks.copperWallLarge, 1),
+                    outputPayload = crystalWallLarge,
+                    powerUse = 4.2f
+                )
+            )
+            consumePower(0.2f)
+            requirements(Category.crafting, ItemStack.with(CWItems.crystalAlloy, 90, CWItems.crystal, 120, Items.silicon, 80, Items.titanium, 60, Items.graphite, 70))
         }
 
         crystalBattery = Battery("crystal-works-crystal-battery").apply {
