@@ -6,7 +6,7 @@
   "version": "1.7.0",
   "repo": "ZenthXSin/crystal-works",
   "main": "crystalworks.CrystalWorksMod",
-  "minGameVersion": "146",
+  "minGameVersion": "155",
   "java": true,
   "dependencies": []
 }
