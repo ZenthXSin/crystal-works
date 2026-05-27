@@ -79,6 +79,7 @@ class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
     var warmupSpeed = 0.03f
     var liquidOutputDirections = intArrayOf(-1)
     var drawer: DrawBlock = DrawDefault()
+    var payloadCapacity = 10 // total payload inventory slots
 
     init {
         update = true
@@ -217,7 +218,14 @@ class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
         override fun acceptPayload(source: Building, payload: Payload): Boolean {
             if (!super.acceptPayload(source, payload)) return false
             val content = payloadContent(payload) ?: return false
-            return recipes.any { r -> r.inputPayloads.any { it.item == content } }
+            // check current recipe needs this payload type
+            val r = recipe() ?: return false
+            if (r.inputPayloads.none { it.item == content }) return false
+            // check capacity: don't exceed required amount * maxThreads buffer
+            val maxNeeded = r.inputPayloads
+                .filter { it.item == content }
+                .maxOfOrNull { it.amount * maxThreads * 2 } ?: return false
+            return payloadInventory.get(content) < maxNeeded
         }
 
         override fun handlePayload(source: Building, payload: Payload) {
