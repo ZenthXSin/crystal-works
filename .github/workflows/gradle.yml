@@ -1,11 +1,8 @@
-name: Build & Release Mod
+name: Build & Auto Release Mod
 
 on:
   push:
     branches: [ main ]
-    tags:
-      - 'v*'
-  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -34,16 +31,51 @@ jobs:
       - name: Build deploy jar
         run: ./gradlew deploy --no-daemon
 
+      - name: List build outputs
+        run: ls -la build/libs/
+
       - name: Upload built jar file
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.event.repository.name }}
-          path: build/libs/${{ github.event.repository.name }}.jar
+          path: build/libs/*.jar
+
+      - name: Generate safe tag and release info
+        id: release_info
+        shell: bash
+        run: |
+          MESSAGE="$(jq -r '.head_commit.message // "Manual Build"' "$GITHUB_EVENT_PATH" 2>/dev/null || echo 'Manual Build')"
+          TITLE="$(printf "%s" "$MESSAGE" | head -n 1)"
+          BODY="$(printf "%s" "$MESSAGE" | tail -n +2 | sed '/./,$!d')"
+
+          SAFE_TAG="$(printf "%s" "$TITLE" \
+            | tr '[:upper:]' '[:lower:]' \
+            | sed 's/[^a-z0-9]/-/g' \
+            | sed 's/-\+/-/g' \
+            | sed 's/^[-.]*//;s/[-.]*$//')"
+
+          if [ -z "$SAFE_TAG" ]; then
+            SAFE_TAG="build"
+          fi
+
+          TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
+          TAG_NAME="${SAFE_TAG}-${TIMESTAMP}"
+
+          echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
+          echo "title=$TITLE" >> "$GITHUB_OUTPUT"
+
+          cat > release_body.md <<EOF
+          $BODY
+          EOF
 
       - name: Publish GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: build/libs/${{ github.event.repository.name }}.jar
+          tag_name: ${{ steps.release_info.outputs.tag_name }}
+          name: ${{ steps.release_info.outputs.title }}
+          body_path: release_body.md
+          files: build/libs/*.jar
           generate_release_notes: true
-          make_latest: true
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
