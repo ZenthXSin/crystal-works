@@ -120,6 +120,8 @@ class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
         hasItems = hasItems || recipes.any { it.inputItems.isNotEmpty() || it.outputItems.isNotEmpty() }
         hasPower = hasPower || recipes.any { it.powerUse > 0f }
         outputsPayload = recipes.any { it.outputPayload != null }
+        // populate liquidFilter so acceptLiquid (in BuildingComp) accepts all recipe input liquids
+        for (r in recipes) for (ls in r.inputLiquids) liquidFilter[ls.liquid.id.toInt()] = true
         super.init()
     }
 
@@ -148,7 +150,7 @@ class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
 
     override fun setStats() {
         super.setStats()
-        stats.add(Stat.productionTime, "@x@", "$maxThreads ${CoreBundle.get("stat.crystal-works-threads", "threads")}")
+        stats.add(Stat.productionTime, "$maxThreads ${CoreBundle.get("stat.crystal-works-threads", "threads")}")
         stats.add(Stat.output) { table ->
             table.left()
             recipes.forEach { recipe ->
@@ -179,9 +181,19 @@ class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
 
     override fun setBars() {
         super.setBars()
-        addBar("progress") { e: CrystalMultiCrafterBuild -> Bar("bar.progress", Pal.ammo, { e.progress }) }
+        addBar("progress") { e: CrystalMultiCrafterBuild -> Bar({ Core.bundle.get("bar.progress") }, { Pal.ammo }, { e.progress }) }
         addBar("threads") { e: CrystalMultiCrafterBuild -> Bar({ "${CoreBundle.get("bar.crystal-works-threads", "Threads")}: ${e.activeThreads()}/${maxThreads}" }, { Pal.accent }, { e.activeThreads() / maxThreads.toFloat() }) }
-        recipes.flatMap { Seq.with(*it.outputLiquids) }.map { it.liquid }.distinct().forEach { addLiquidBar(it) }
+        // dynamic liquid bar: shows output liquid of current recipe
+        addBar("current-output-liquid") { e: CrystalMultiCrafterBuild ->
+            val r = e.recipe()
+            if (r == null || r.outputLiquids.isEmpty()) return@addBar null
+            val ls = r.outputLiquids[0]
+            Bar(
+                { ls.liquid.localizedName },
+                { ls.liquid.barColor() },
+                { e.liquids.get(ls.liquid) / liquidCapacity }
+            )
+        }
     }
 
     inner class CrystalMultiCrafterBuild : PayloadBlockBuild<Payload>() {
