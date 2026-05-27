@@ -139,7 +139,29 @@ object CWBlocks {
             requirements(Category.crafting, ItemStack.with(Items.copper, 100, Items.lead, 70, CWItems.crystal, 25))
         }
 
+        crystalWall = Wall("crystal-works-crystal-wall").apply {
+            size = 1
+            health = 840
+            lightningChance = 0.08f
+            lightningDamage = 12f
+            lightningLength = 10
+            lightningColor = Color.valueOf("65C3E8")
+            flashHit = true
+            flashColor = Color.valueOf("B8F0FF")
+            requirements(Category.defense, ItemStack.with(CWItems.crystal, 6))
+        }
 
+        crystalWallLarge = Wall("crystal-works-crystal-wall-large").apply {
+            size = 2
+            health = 1680
+            lightningChance = 0.12f
+            lightningDamage = 18f
+            lightningLength = 14
+            lightningColor = Color.valueOf("65C3E8")
+            flashHit = true
+            flashColor = Color.valueOf("B8F0FF")
+            requirements(Category.defense, ItemStack.with(CWItems.crystal, 24, Items.lead, 30, Items.graphite, 20))
+        }
 
         crystalAssembler = CrystalMultiCrafter("crystal-works-crystal-assembler").apply {
             size = 4
@@ -358,30 +380,6 @@ object CWBlocks {
                 statusDuration = 60f
             })
             requirements(Category.turret, ItemStack.with(CWItems.crystal, 40, Items.lead, 50, Items.silicon, 30, Items.titanium, 20))
-        }
-
-        crystalWall = Wall("crystal-works-crystal-wall").apply {
-            size = 1
-            health = 840
-            lightningChance = 0.08f
-            lightningDamage = 12f
-            lightningLength = 10
-            lightningColor = Color.valueOf("65C3E8")
-            flashHit = true
-            flashColor = Color.valueOf("B8F0FF")
-            requirements(Category.defense, ItemStack.with(CWItems.crystal, 6))
-        }
-
-        crystalWallLarge = Wall("crystal-works-crystal-wall-large").apply {
-            size = 2
-            health = 1680
-            lightningChance = 0.12f
-            lightningDamage = 18f
-            lightningLength = 14
-            lightningColor = Color.valueOf("65C3E8")
-            flashHit = true
-            flashColor = Color.valueOf("B8F0FF")
-            requirements(Category.defense, ItemStack.with(CWItems.crystal, 24, Items.lead, 30, Items.graphite, 20))
         }
     }
 }

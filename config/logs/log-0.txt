@@ -1,0 +1,4 @@
+[05-28-2026 06:12:37] [I] Server loaded. Type 'help' for help.
+[05-28-2026 06:12:37] [I] Found 1 command-line arguments to parse.
+[05-28-2026 06:12:37] [E] Invalid command argument sent: '-mod build/libs/crystal-worksDesktop.jar -batchmode -disable-steam': unknownCommand
+[05-28-2026 06:12:37] [E] Argument usage: <command-1> <command1-args...>,<command-2> <command-2-args2...>
