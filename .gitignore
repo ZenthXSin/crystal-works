@@ -1,4 +1,4 @@
-*.pyc
+-e *.pyc
 __pycache__/
 .DS_Store
 *.swp
@@ -9,3 +9,8 @@ __pycache__/
 build/
 gradle-app.setting
 local.properties
+
+# Test artifacts
+config/
+.learnings/
+crystal-worksDesktop.jar
