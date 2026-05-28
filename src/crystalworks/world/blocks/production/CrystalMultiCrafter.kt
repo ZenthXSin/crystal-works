@@ -37,9 +37,6 @@ import mindustry.world.blocks.payloads.BuildPayload
 import mindustry.world.blocks.payloads.Payload
 import mindustry.world.blocks.payloads.PayloadBlock
 import mindustry.world.blocks.payloads.UnitPayload
-import mindustry.world.consumers.ConsumeItemDynamic
-import mindustry.world.consumers.ConsumeLiquidsDynamic
-import mindustry.world.consumers.ConsumePayloadDynamic
 import mindustry.world.consumers.ConsumePowerDynamic
 import mindustry.world.draw.DrawBlock
 import mindustry.world.draw.DrawDefault
@@ -53,8 +50,8 @@ import kotlin.math.min
 
 /**
  * Multi-recipe crafter with selectable parallel thread count and payload input/output.
- * Verified against Mindustry v155.4/v158 payload APIs: PayloadBlockBuild, PayloadSeq,
- * ConsumeItemDynamic, ConsumeLiquidsDynamic, ConsumePayloadDynamic and ConsumePowerDynamic.
+ * v2 — supports multi-recipe selection (checkboxes), manual consumption in craft(),
+ *        vertical stat layout, payload inventory bar.
  */
 class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
     class Recipe(
@@ -98,20 +95,21 @@ class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
         ambientSoundVolume = 0.04f
         flags = EnumSet.of(BlockFlag.factory)
 
+        // Config: intArrayOf(recipeBitmask, threadCount)
         config(IntArray::class.java) { build: CrystalMultiCrafterBuild, data: IntArray ->
-            if (data.isNotEmpty()) build.setRecipe(data[0])
+            if (data.size > 0) build.recipeMask = data[0]
             if (data.size > 1) build.applyThreads(data[1])
         }
-        config(Integer::class.java) { build: CrystalMultiCrafterBuild, value: Integer -> build.setRecipe(value.toInt()) }
-        configClear { build: CrystalMultiCrafterBuild -> build.setRecipe(-1) }
+        configClear { build: CrystalMultiCrafterBuild -> build.recipeMask = 0 }
 
-        consume(ConsumeItemDynamic { build: CrystalMultiCrafterBuild -> build.recipe()?.inputItems ?: ItemStack.empty })
-        consume(ConsumeLiquidsDynamic { build: CrystalMultiCrafterBuild -> build.recipe()?.inputLiquids ?: emptyArray() })
-        consume(ConsumePayloadDynamic { build: CrystalMultiCrafterBuild -> build.recipe()?.inputPayloads ?: Seq() })
+        // Manual consumption in craft() — only PowerConsumer remains for display
         consume(ConsumePowerDynamic { build: Building ->
             val b = build as CrystalMultiCrafterBuild
-            val recipe = b.recipe()
-            if (recipe == null) 0f else recipe.powerUse * b.activeThreads()
+            var total = 0f
+            for (i in 0 until recipes.size) {
+                if (b.recipeEnabled(i)) total += recipes[i].powerUse
+            }
+            total * b.activeThreads().coerceAtLeast(1)
         })
     }
 
@@ -122,7 +120,6 @@ class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
         hasPower = hasPower || recipes.any { it.powerUse > 0f }
         outputsPayload = recipes.any { it.outputPayload != null }
         super.init()
-        // populate liquidFilter after super.init() allocates the array (Block.init() creates new boolean[content.liquids().size])
         for (r in recipes) for (ls in r.inputLiquids) liquidFilter[ls.liquid.id.toInt()] = true
     }
 
@@ -155,14 +152,25 @@ class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
         stats.add(Stat.output) { table ->
             table.left()
             recipes.forEach { recipe ->
-                table.table(Styles.grayPanel) { row ->
-                    row.left().defaults().pad(3f)
-                    row.image(recipe.icon.uiIcon).size(32f)
-                    row.add(CoreBundle.get("recipe.$name-${recipe.name}.name", recipe.name)).left().width(110f)
-                    row.add("${Mathf.round(recipe.craftTime / 60f)}s").color(Color.lightGray)
-                    addStacks(row, recipe.inputItems, recipe.inputLiquids, recipe.inputPayloads, true)
-                    row.image(Icon.right).size(24f).padLeft(6f).padRight(6f)
-                    addStacks(row, recipe.outputItems, recipe.outputLiquids, if (recipe.outputPayload == null) Seq() else Seq.with(PayloadStack(recipe.outputPayload, 1)), false)
+                val recipeName = CoreBundle.get("recipe.$name-${recipe.name}.name", recipe.name)
+                table.table(Styles.grayPanel) { t ->
+                    t.left().defaults().pad(3f)
+                    // Top row: icon + name + time
+                    t.table { top ->
+                        top.left()
+                        top.image(recipe.icon.uiIcon).size(28f).padRight(4f)
+                        top.add(recipeName).left().width(120f).color(Color.white)
+                        top.add("${Mathf.round(recipe.craftTime / 60f)}s").color(Color.lightGray).padLeft(6f)
+                    }.growX().row()
+                    // Bottom row: inputs → outputs
+                    t.table { bottom ->
+                        bottom.left()
+                        addStacks(bottom, recipe.inputItems, recipe.inputLiquids, recipe.inputPayloads, true)
+                        bottom.image(Icon.right).size(20f).padLeft(4f).padRight(4f)
+                        addStacks(bottom, recipe.outputItems, recipe.outputLiquids,
+                            if (recipe.outputPayload == null) Seq() else Seq.with(PayloadStack(recipe.outputPayload, 1)),
+                            false)
+                    }
                 }.growX().pad(2f)
                 table.row()
             }
@@ -176,31 +184,46 @@ class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
             items.forEach { box.add(StatValues.stack(it)).padRight(2f); if (++count % 4 == 0) box.row() }
             liquids.forEach { box.add(StatValues.displayLiquid(it.liquid, it.amount * 60f, true)).padRight(2f); if (++count % 2 == 0) box.row() }
             payloads.forEach { box.add(StatValues.stack(it)).padRight(2f); if (++count % 4 == 0) box.row() }
-            if (count == 0) box.add(if (input) "@none" else "-").color(Color.lightGray)
-        }.left().minWidth(90f)
+            if (count == 0) box.add("None").color(Color.lightGray)
+        }.left().minWidth(80f)
     }
 
     override fun setBars() {
         super.setBars()
-        addBar("progress") { e: CrystalMultiCrafterBuild -> Bar({ Core.bundle.get("bar.progress") }, { Pal.ammo }, { e.progress }) }
-        addBar("threads") { e: CrystalMultiCrafterBuild -> Bar({ "${CoreBundle.get("bar.crystal-works-threads", "Threads")}: ${e.activeThreads()}/${maxThreads}" }, { Pal.accent }, { e.activeThreads() / maxThreads.toFloat() }) }
-        // dynamic liquid bar: shows output liquid of current recipe
+        addBar("progress") { e: CrystalMultiCrafterBuild ->
+            val progress = e.totalProgressFraction()
+            Bar({ Core.bundle.get("bar.progress") }, { Pal.ammo }, { progress })
+        }
+        addBar("threads") { e: CrystalMultiCrafterBuild ->
+            Bar({ "${CoreBundle.get("bar.crystal-works-threads", "Threads")}: ${e.activeThreads()}/${maxThreads}" }, { Pal.accent }, { e.activeThreads() / maxThreads.toFloat() })
+        }
+        // Dynamic liquid bar: shows output liquid of current/any active recipe
         addBar("current-output-liquid") { e: CrystalMultiCrafterBuild ->
-            val r = e.recipe()
-            if (r == null || r.outputLiquids.isEmpty()) return@addBar null
-            val ls = r.outputLiquids[0]
+            val activeLiquids = recipes.filterIndexed { i, _ -> e.recipeEnabled(i) }
+                .flatMap { it.outputLiquids.map { ls -> ls.liquid } }.distinct()
+            if (activeLiquids.isEmpty()) return@addBar null
+            // show the first output liquid across active recipes
+            val liq = activeLiquids.first()
+            Bar({ liq.localizedName }, { liq.barColor() }, { e.liquids.get(liq) / liquidCapacity })
+        }
+        // Payload inventory bar
+        addBar("payloads") { e: CrystalMultiCrafterBuild ->
+            val total = e.payloadInventory.total()
+            if (total <= 0) return@addBar null
             Bar(
-                { ls.liquid.localizedName },
-                { ls.liquid.barColor() },
-                { e.liquids.get(ls.liquid) / liquidCapacity }
+                { "${CoreBundle.get("bar.crystal-works-payload-inventory", "Payloads")}: $total" },
+                { Pal.items },
+                { total.toFloat() / payloadCapacity }
             )
         }
     }
 
     inner class CrystalMultiCrafterBuild : PayloadBlockBuild<Payload>() {
-        var recipeIndex = if (recipes.isEmpty) -1 else 0
+        /** Bitmask: bit i = recipe i is enabled */
+        var recipeMask = if (recipes.isEmpty) 0 else 1
         var threadCount = 1
-        var progress = 0f
+        /** Per-recipe progress. Array size = recipes.size, set in init after recipes defined */
+        var recipeProgress = FloatArray(0)
         var totalProgress = 0f
         var warmup = 0f
         var outputPayload: Payload? = null
@@ -208,47 +231,89 @@ class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
         val outputVector = Vec2()
         var outputRotation = 0f
 
-        fun recipe(): Recipe? = if (recipeIndex in 0 until recipes.size) recipes[recipeIndex] else null
-        fun setRecipe(index: Int) { recipeIndex = if (index in 0 until recipes.size) index else -1; progress = 0f }
+        /** Ensure recipeProgress is sized correctly after recipes are registered */
+        private fun ensureProgressArray() {
+            if (recipeProgress.size != recipes.size) recipeProgress = FloatArray(recipes.size)
+        }
+
+        fun recipeEnabled(index: Int): Boolean = index in 0 until recipes.size && (recipeMask and (1 shl index)) != 0
+
+        fun activeRecipeCount(): Int = recipeMask.countOneBits()
+
+        fun activeThreads(): Int = if (enabled && activeRecipeCount() > 0) threadCount else 0
+
         fun applyThreads(value: Int) { threadCount = Mathf.clamp(value, 1, maxThreads) }
-        fun activeThreads(): Int = if (enabled && recipe() != null) threadCount else 0
+
+        fun toggleRecipe(index: Int) {
+            ensureProgressArray()
+            recipeMask = recipeMask xor (1 shl index)
+        }
+
+        /** Fraction of total work done across active recipes, normalized to [0,1] */
+        fun totalProgressFraction(): Float {
+            val count = activeRecipeCount()
+            if (count == 0) return 0f
+            var sum = 0f
+            for (i in 0 until recipes.size) if (recipeEnabled(i)) sum += recipeProgress[i]
+            return Mathf.clamp(sum / count)
+        }
 
         override fun getPayloads(): PayloadSeq = payloadInventory
 
         override fun acceptPayload(source: Building, payload: Payload): Boolean {
             if (!super.acceptPayload(source, payload)) return false
             val content = payloadContent(payload) ?: return false
-            // check current recipe needs this payload type
-            val r = recipe() ?: return false
-            if (r.inputPayloads.none { it.item == content }) return false
-            // check capacity: don't exceed required amount * maxThreads buffer
-            val maxNeeded = r.inputPayloads
-                .filter { it.item == content }
-                .maxOfOrNull { it.amount * maxThreads * 2 } ?: return false
+            // Check if ANY active recipe needs this payload type
+            var anyNeeds = false
+            var maxNeeded = 0
+            for (i in 0 until recipes.size) {
+                if (!recipeEnabled(i)) continue
+                val r = recipes[i]
+                for (ps in r.inputPayloads) {
+                    if (ps.item == content) {
+                        anyNeeds = true
+                        maxNeeded = max(maxNeeded, ps.amount * maxThreads * 2)
+                    }
+                }
+            }
+            if (!anyNeeds) return false
             return payloadInventory.get(content) < maxNeeded
         }
 
-        override fun handlePayload(source: Building, payload: Payload) {
-            super.handlePayload(source, payload)
-        }
-
         override fun shouldConsume(): Boolean {
-            val r = recipe() ?: return false
-            if (outputPayload != null) return false
-            if (!canFitOutputs(r)) return false
+            if (activeRecipeCount() == 0 || outputPayload != null) return false
+            // Manual consumption in craft(), but must return true to drive update
             return super.shouldConsume()
         }
 
         override fun updateTile() {
+            ensureProgressArray()
             super.updateTile()
             moveInputPayloadToInventory()
-            val r = recipe()
-            if (r != null && efficiency > 0f && outputPayload == null) {
-                val scale = activeThreads().coerceAtLeast(1)
-                progress += getProgressIncrease(r.craftTime / scale)
-                warmup = Mathf.approachDelta(warmup, 1f, warmupSpeed)
+            var anyWorking = false
+            var activeCount = activeRecipeCount()
 
-                r.outputLiquids.forEach { out -> handleLiquid(this, out.liquid, min(out.amount * getProgressIncrease(1f) * scale, liquidCapacity - liquids.get(out.liquid))) }
+            if (enabled && activeCount > 0 && efficiency > 0f && outputPayload == null) {
+                // Distribute maxThreads across active recipes: each gets 1+n bonus threads
+                val basePerRecipe = max(1, maxThreads / activeCount)
+                for (i in 0 until recipes.size) {
+                    if (!recipeEnabled(i)) continue
+                    val r = recipes[i]
+                    if (!canFitOutputs(r)) continue
+
+                    if (!hasInputs(r)) continue
+                    val speed = basePerRecipe
+                    recipeProgress[i] += getProgressIncrease(r.craftTime / speed)
+                    anyWorking = true
+
+                    // Continuous liquid output during crafting (recipe-specific)
+                    r.outputLiquids.forEach { out ->
+                        handleLiquid(this, out.liquid,
+                            min(out.amount * getProgressIncrease(1f) * speed,
+                                liquidCapacity - liquids.get(out.liquid)))
+                    }
+                }
+                warmup = Mathf.approachDelta(warmup, 1f, warmupSpeed)
 
                 if (wasVisible && Mathf.chanceDelta(updateEffectChance.toDouble())) {
                     updateEffect.at(x + Mathf.range(size * updateEffectSpread), y + Mathf.range(size * updateEffectSpread))
@@ -259,8 +324,14 @@ class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
 
             totalProgress += warmup * Time.delta
 
-            if (r != null && progress >= 1f) craft(r)
-            dumpOutputs(r)
+            // Craft finished recipes
+            for (i in 0 until recipes.size) {
+                if (recipeEnabled(i) && recipeProgress[i] >= 1f) craft(i)
+            }
+
+            // Dump outputs for all active recipes (gated by internal timer)
+            for (i in 0 until recipes.size) if (recipeEnabled(i)) dumpOutputs(recipes[i])
+
             moveOutCraftedPayload()
         }
 
@@ -280,11 +351,27 @@ class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
         private fun canFitOutputs(r: Recipe): Boolean {
             r.outputItems.forEach { if (items.get(it.item) + it.amount > itemCapacity) return false }
             r.outputLiquids.forEach { if (liquids.get(it.liquid) >= liquidCapacity - 0.001f) return false }
+            // For payload: check if another recipe is currently outputting a payload
+            if (r.outputPayload != null && outputPayload != null) return false
             return true
         }
 
-        private fun craft(r: Recipe) {
-            consume()
+        /** Returns true if we have enough inputs for this recipe (all input types satisfied) */
+        private fun hasInputs(r: Recipe): Boolean {
+            r.inputItems.forEach { if (items.get(it.item) < it.amount) return false }
+            r.inputLiquids.forEach { if (liquids.get(it.liquid) < it.amount) return false }
+            r.inputPayloads.forEach { if (payloadInventory.get(it.item) < it.amount) return false }
+            return true
+        }
+
+        private fun craft(index: Int) {
+            val r = recipes[index]
+            // Manual consumption: remove inputs
+            r.inputItems.forEach { stack -> items.remove(stack.item, stack.amount) }
+            r.inputLiquids.forEach { stack -> liquids.remove(stack.liquid, stack.amount) }
+            r.inputPayloads.forEach { stack -> payloadInventory.remove(stack.item, stack.amount) }
+
+            // Produce outputs
             r.outputItems.forEach { stack -> repeat(stack.amount) { offload(stack.item) } }
             r.outputPayload?.let {
                 outputPayload = BuildPayload(it, team)
@@ -293,13 +380,14 @@ class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
                 it.placeEffect.at(x, y, it.size * Vars.tilesize.toFloat())
             }
             if (wasVisible) craftEffect.at(x, y)
-            progress %= 1f
+            recipeProgress[index] %= 1f
         }
 
-        private fun dumpOutputs(r: Recipe?) {
-            if (r == null) return
+        private fun dumpOutputs(r: Recipe) {
             if (timer(timerDump, dumpTime / timeScale)) r.outputItems.forEach { dump(it.item) }
-            r.outputLiquids.forEachIndexed { i, stack -> dumpLiquid(stack.liquid, 2f, if (liquidOutputDirections.size > i) liquidOutputDirections[i] else -1) }
+            r.outputLiquids.forEachIndexed { i, stack ->
+                dumpLiquid(stack.liquid, 2f, if (liquidOutputDirections.size > i) liquidOutputDirections[i] else -1)
+            }
         }
 
         private fun moveOutCraftedPayload() {
@@ -318,29 +406,44 @@ class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
         }
 
         override fun acceptItem(source: Building, item: Item): Boolean {
-            val r = recipe() ?: return false
-            return r.inputItems.any { it.item == item } && items.get(item) < getMaximumAccepted(item)
+            // Accept item if any active recipe needs it
+            for (i in 0 until recipes.size) {
+                if (!recipeEnabled(i)) continue
+                val r = recipes[i]
+                if (r.inputItems.any { it.item == item } && items.get(item) < getMaximumAccepted(item)) return true
+            }
+            return false
         }
 
         override fun getMaximumAccepted(item: Item): Int {
-            val r = recipe() ?: return 0
-            return max(itemCapacity, (r.inputItems.firstOrNull { it.item == item }?.amount ?: 0) * maxThreads * 2)
+            var maxNeed = 0
+            for (i in 0 until recipes.size) {
+                if (!recipeEnabled(i)) continue
+                recipes[i].inputItems.firstOrNull { it.item == item }?.let {
+                    maxNeed = max(maxNeed, it.amount * maxThreads * 2)
+                }
+            }
+            return max(itemCapacity, maxNeed)
         }
 
         override fun buildConfiguration(table: Table) {
+            ensureProgressArray()
             table.table(Styles.black6) { t ->
                 t.left().defaults().size(42f).pad(2f)
                 recipes.forEachIndexed { index, r ->
-                    val button = t.button(Tex.whiteui, Styles.clearTogglei, 36f) { configure(intArrayOf(index, threadCount)) }.tooltip(r.icon.localizedName).get()
+                    val button = t.button(Tex.whiteui, Styles.clearTogglei, 36f) {
+                        // Toggle recipe on/off
+                        configure(intArrayOf(recipeMask xor (1 shl index), threadCount))
+                    }.tooltip(r.icon.localizedName).get()
                     button.style.imageUp = TextureRegionDrawable(r.icon.uiIcon)
-                    button.update { button.setChecked(recipeIndex == index) }
+                    button.update { button.setChecked(recipeEnabled(index)) }
                     if ((index + 1) % 4 == 0) t.row()
                 }
             }.row()
             table.table(Styles.black6) { t ->
                 t.left().defaults().size(42f).pad(2f)
                 for (i in 1..maxThreads) {
-                    val button = t.button("${i}x", Styles.clearTogglet) { configure(intArrayOf(recipeIndex, i)) }.get()
+                    val button = t.button("${i}x", Styles.clearTogglet) { configure(intArrayOf(recipeMask, i)) }.get()
                     button.update { button.setChecked(threadCount == i) }
                 }
             }.left()
@@ -350,8 +453,19 @@ class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
             super.display(table)
             table.row()
             table.table { t ->
-                t.image(recipe()?.icon?.uiIcon ?: Icon.cancel.region).size(32f).padRight(4f)
-                t.label { recipe()?.let { CoreBundle.get("recipe.${name}-${it.name}.name", it.name) } ?: "@none" }.wrap().width(210f).color(Color.lightGray)
+                val active = (0 until recipes.size).filter { recipeEnabled(it) }
+                if (active.isEmpty()) {
+                    t.image(Icon.cancel).size(32f).padRight(4f)
+                    t.add("None").color(Color.lightGray)
+                } else if (active.size == 1) {
+                    val r = recipes[active[0]]
+                    t.image(r.icon.uiIcon).size(32f).padRight(4f)
+                    t.label { CoreBundle.get("recipe.${name}-${r.name}.name", r.name) }.wrap().width(210f).color(Color.lightGray)
+                } else {
+                    val r = recipes[active[0]]
+                    t.image(r.icon.uiIcon).size(32f).padRight(4f)
+                    t.add("${active.size} ${CoreBundle.get("bar.crystal-works-recipes", "recipes")}").color(Color.lightGray)
+                }
                 t.row()
                 t.add("${CoreBundle.get("bar.crystal-works-threads", "Threads")}: ${activeThreads()}/$maxThreads").color(Color.lightGray).left()
             }.left()
@@ -365,25 +479,31 @@ class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
                 it.set(x + outputVector.x, y + outputVector.y, outputRotation)
                 it.draw()
             }
-            recipe()?.let {
+            // Draw icon of the most-recently-active recipe (for visual cue)
+            val active = (0 until recipes.size).filter { recipeEnabled(it) }
+            if (active.isNotEmpty()) {
+                val idx = active.minByOrNull { recipeProgress[it] } ?: active.first()
+                val r = recipes[idx]
                 Draw.z(Layer.blockOver + 0.1f)
                 Draw.color(Pal.accent, warmup)
-                Draw.rect(it.icon.uiIcon, x, y, 24f, 24f)
+                Draw.rect(r.icon.uiIcon, x, y, 24f, 24f)
                 Draw.color()
             }
         }
 
         override fun drawSelect() {
             super.drawSelect()
-            recipe()?.let { drawItemSelection(it.icon) }
+            // Show first active recipe icon
+            val idx = (0 until recipes.size).firstOrNull { recipeEnabled(it) }
+            idx?.let { drawItemSelection(recipes[it].icon) }
         }
 
         override fun sense(sensor: LAccess): Double {
-            if (sensor == LAccess.progress) return progress().toDouble()
+            if (sensor == LAccess.progress) return totalProgressFraction().toDouble()
             return super.sense(sensor)
         }
 
-        override fun progress(): Float = Mathf.clamp(progress)
+        override fun progress(): Float = totalProgressFraction()
         override fun warmup(): Float = warmup
         override fun totalProgress(): Float = totalProgress
         override fun getPayload(): Payload? = outputPayload ?: payload
@@ -395,14 +515,15 @@ class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
             }
             return super.takePayload()
         }
-        override fun shouldAmbientSound(): Boolean = efficiency > 0f
-        override fun config(): Any = intArrayOf(recipeIndex, threadCount)
+        override fun shouldAmbientSound(): Boolean = efficiency > 0f && activeRecipeCount() > 0
+        override fun config(): Any = intArrayOf(recipeMask, threadCount)
 
         override fun write(write: Writes) {
             super.write(write)
-            write.i(recipeIndex)
+            write.i(recipeMask)
             write.i(threadCount)
-            write.f(progress)
+            for (f in recipeProgress) write.f(f)
+            write.f(totalProgress)
             write.f(warmup)
             payloadInventory.write(write)
             Payload.write(outputPayload, write)
@@ -413,9 +534,11 @@ class CrystalMultiCrafter(name: String) : PayloadBlock(name) {
 
         override fun read(read: Reads, revision: Byte) {
             super.read(read, revision)
-            recipeIndex = read.i()
+            ensureProgressArray()
+            recipeMask = read.i()
             threadCount = read.i()
-            progress = read.f()
+            for (i in recipeProgress.indices) recipeProgress[i] = read.f()
+            totalProgress = read.f()
             warmup = read.f()
             payloadInventory.read(read)
             outputPayload = Payload.read(read)
